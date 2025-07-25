@@ -10,7 +10,7 @@ connectDB()
         console.log("Express error "+err);
     })
     app.listen(process.env.PORT || 3000,()=>{
-        console.log("server up and running");
+        console.log("server up and running at port "+process.env.PORT);
     })
 })
 .catch((err)=>{
