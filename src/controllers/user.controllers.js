@@ -4,9 +4,27 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import { APIResponse } from "../utils/APIResponse.js";
 
+const generateAccessAndRefreshToken = async (userId) => {
+    try {
+        const user = await User.findById(userId);
+
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
+        user.refreshToken = refreshToken;
+        user.save({ validateBefore: false });
+
+        return { refreshToken, accessToken };
+
+    } catch (error) {
+        throw new APIError(500, "Something went wrong while generating tokens");
+    }
+}
+
+
 const registerUser = asyncHandler(async (req, res) => {
     // User detail
-    console.log(req.body);
+    // console.log(req.body);
     const { username, email, fullName, password } = req.body;
 
     if ([username, fullName, password, email].some((field) => field?.trim() === "")) {
@@ -18,18 +36,19 @@ const registerUser = asyncHandler(async (req, res) => {
     if (existingUser) {
         throw new APIError(409, "username already exists");
     }
-    console.log(req.files);
+    // console.log(req.files); 
     const avatarLocalPath = req.files?.avatar[0]?.path;
     // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
     let coverImageLocalPath;
-    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
         coverImageLocalPath = req.files.coverImage[0].path;
     }
 
-        if (!avatarLocalPath) {
-            throw new APIError(400, "avatar is required");
-        }
+    if (!avatarLocalPath) {
+        throw new APIError(400, "avatar is required");
+    }
 
     const avatar = await uploadOnCloudinary(avatarLocalPath);
     const coverImage = await uploadOnCloudinary(coverImageLocalPath);
@@ -59,4 +78,47 @@ const registerUser = asyncHandler(async (req, res) => {
 
 })
 
-export { registerUser }
+const loginUser = asyncHandler(async (req, res) => {
+    const { email, username, password } = req.body;
+
+    if (!email && !username) {
+        throw new APIError(400, "Username and email required");
+    }
+
+    const user = User.findOne({ $and: [{ username }, { email }] });
+
+    if (!user) {
+        throw new APIError(404, "user does not exists");
+    }
+
+    const isValidPassword = await user.isPasswordCorrect(password);
+
+    if (!isValidPassword) {
+        throw new APIError(404, "Password incorrect");
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+
+    const loggedInUser = user.findById(user._id).select("-password -refreshToken");
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    }
+
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(
+            new APIResponse(200, { user: loggedInUser, accessToken, refreshToken }, "UserLoggenIn successfully")
+        )
+
+})
+
+const logoutUser = asyncHandler((req, res) => {
+    
+})
+
+
+export { registerUser, loginUser }
