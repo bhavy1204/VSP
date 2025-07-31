@@ -13,13 +13,14 @@ export const verifyJwt = asyncHandler(async (req, res, next) => {
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-        const user = User.findById(decodedToken?._id).select("-password -refreshToken")
+        const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
 
         if (!user) {
             throw new APIError(404, "User does not exists");
         }
 
         req.user = user;
+        next();
     } catch (error) {
         throw new APIError(404, error?.message || "User not found");
     }
