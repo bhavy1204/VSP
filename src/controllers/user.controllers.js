@@ -82,7 +82,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { email, username, password } = req.body;
 
-    if (!email && !username) {
+    if (!(email && username)) {
         throw new APIError(400, "Username and email required");
     }
 
@@ -118,7 +118,7 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const logoutUser = asyncHandler(async (req, res) => {
-    const user = await User.findByIdAndUpdate(req.user._id, {
+    await User.findByIdAndUpdate(req.user._id, {
         $set: {
             refreshToken: undefined,
         }

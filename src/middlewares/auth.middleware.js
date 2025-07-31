@@ -1,7 +1,7 @@
-import { APIError } from "../utils/APIError";
-import { asyncHandler } from "../utils/asyncHandler";
+import { APIError } from "../utils/APIError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken"
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 
 export const verifyJwt = asyncHandler(async (req, res, next) => {
     try {
@@ -24,7 +24,4 @@ export const verifyJwt = asyncHandler(async (req, res, next) => {
     } catch (error) {
         throw new APIError(404, error?.message || "User not found");
     }
-
-
-
 })
