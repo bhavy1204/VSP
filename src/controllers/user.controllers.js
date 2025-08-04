@@ -274,14 +274,83 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         .json(200, user, "coverImage updated successfully");
 })
 
-export { 
-    registerUser, 
-    loginUser, 
-    logoutUser, 
-    refereshToken, 
-    changeCurrentPassword, 
-    getCurrentUser, 
-    updateUserCoverImage, 
-    updateUserPfp, 
-    updateUserDetails 
+const getUserChannelProfile = asyncHandler(async (req, res) => {
+    const { username } = req.params;
+
+    if (!username?.trim()) {
+        throw new APIError(400, "username missing");
+    }
+
+    const channel = await User.aggregate([
+        {
+            $match: {
+                username: username?.toLowerCase()
+            }
+        },
+        {
+            $lookup: {
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "channels",
+                as: "subscribers"
+            }
+        },
+        {
+            $lookup: {
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "subscriber",
+                as: "subscribedTo"
+            }
+        },
+        {
+            $addFields: {
+                subcribersCount: {
+                    $size: "$subscribers"
+                },
+                channelSunscribedToCount: {
+                    $size: "$subscribedTo"
+                },
+                isSubsribed: {
+                    $condition: {
+                        if: { $in: [req.user?._id, "subscribers.subscriber"] },
+                        then: true,
+                        else: false
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                fullName: 1,
+                username: 1,
+                subcribersCount: 1,
+                channelSunscribedToCount: 1,
+                isSubsribed: 1,
+                email: 1,
+                coverImage: 1,
+                avatar: 1,
+            }
+        }
+    ])
+
+    if (!channel?.length) {
+        throw new APIError(404, "Channel does not exists")
+    }
+
+    return res.status(200)
+        .json(new APIResponse(200, channel[0], "user channel fetched success"));
+})
+
+export {
+    registerUser,
+    loginUser,
+    logoutUser,
+    refereshToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateUserCoverImage,
+    updateUserPfp,
+    updateUserDetails,
+    getUserChannelProfile
 }
