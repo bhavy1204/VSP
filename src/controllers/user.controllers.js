@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import { APIResponse } from "../utils/APIResponse.js";
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose";
 
 const generateAccessAndRefreshToken = async (userId) => {
     try {
@@ -342,6 +343,60 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         .json(new APIResponse(200, channel[0], "user channel fetched success"));
 })
 
+const getWAtchHistory = asyncHandler(async (req, res) => {
+    // Req.user._id gives us a string insted of the id as we are using mongoose. Originallly the _id is "objectid(idsometbbbckab)".
+    // To ye chiz aggregate piplines me nhi use ho payegi kyuki pipeline me mongoose ese convert nhi kar sakta. 
+    // to apne ko fir is id ko convert karna padta hai.
+    const user = await User.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            }
+        },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "watchHistory",
+                foreignField: "_id",
+                as: "watchHistory",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "owners",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        fullName: 1,
+                                        username: 1,
+                                        avatar: 1,
+                                    }
+                                }
+                            ]
+                        },
+                    },
+                    {
+                        $addFields: {
+                            owner: {
+                                // giving first field of array which is returned. nothing much
+                                $first: "$owner"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+
+    return res.status(200)
+        .json(
+            new APIResponse(200, user[0].watchHistory, "history fteched success")
+        )
+
+})
+
 export {
     registerUser,
     loginUser,
@@ -352,5 +407,6 @@ export {
     updateUserCoverImage,
     updateUserPfp,
     updateUserDetails,
-    getUserChannelProfile
+    getUserChannelProfile,
+    getWAtchHistory
 }
