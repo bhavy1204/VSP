@@ -1,12 +1,12 @@
 import { Video } from "../models/video.model.js"
 import { Subscription } from "../models/subscription.model.js"
-import { Playlist, playlist } from "../models/playlist.model.js"
-import { tweet } from "../models/tweet.model.js"
+import { Playlist} from "../models/playlist.model.js"
+import { Tweet } from "../models/tweet.model.js"
 import { User } from "../models/user.model.js"
 import { Like } from "../models/like.model.js"
 import { asyncHandler } from "../utils/asyncHandler.js";
-import APIError from "../utils/APIError.js"
-import APIResponse from "../utils/APIResponse.js"
+import {APIError} from "../utils/APIError.js"
+import {APIResponse }from "../utils/APIResponse.js"
 
 const viewChannelStat = asyncHandler(async (req, res) => {
 

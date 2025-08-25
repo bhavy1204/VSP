@@ -1,8 +1,7 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { APIError } from "../utils/APIError";
-import { APIResponse } from "../utils/APIResponse";
-import mongoose from "mongoose";
-import { Comment } from "../models/comment.model";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { APIError } from "../utils/APIError.js";
+import { APIResponse } from "../utils/APIResponse.js";
+import { Comment } from "../models/comment.model.js";
 
 
 const getVideoComment = asyncHandler(async (req, res) => {
