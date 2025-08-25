@@ -4,10 +4,10 @@ import { verifyJwt } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.route("/").post(verifyJwt,toggleSubscription);
+router.route("/toggleSubscribe/:channelId").post(verifyJwt, toggleSubscription);
 
-router.route("/").get(getUserChannelSubscriber);
+router.route("/c/getSubscriber/:channelId").get(getUserChannelSubscriber);
 
-router.route("/").get(verifyJwt, getSubscribedChannel);
+router.route("/u/getSubscribed/:subscriberId").get( getSubscribedChannel);
 
 export default router;
