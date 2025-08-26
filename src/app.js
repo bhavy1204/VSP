@@ -26,6 +26,7 @@ import like from "./routes/like.route.js"
 import playlist from "./routes/playlist.route.js"
 import subscription from "./routes/subscription.route.js"
 import tweet from "./routes/tweet.route.js"
+import video from "./routes/video.route.js"
 
 // Routes declaration
 app.use("/api/v1/users", userRouter);
@@ -36,5 +37,6 @@ app.use("/api/v1/like", like);
 app.use("/api/v1/playlist", playlist);
 app.use("/api/v1/subscription", subscription);
 app.use("/api/v1/tweet", tweet);
+app.use("/api/v1/video",video)
 
 export { app }

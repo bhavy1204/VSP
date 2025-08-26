@@ -1,19 +1,15 @@
-import { v2 } from "cloudinary";
-import fs from "fs";
-
-v2.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+import c from "./cloudinaryConfig.js";
+import fs from "fs"
 
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) {
             return null;
         }
-        
-        const response = await v2.uploader.upload(localFilePath, {
+        console.log("CLOUDINARY API KEY in Cloudinary.js:", process.env.CLOUDINARY_API_KEY);
+        console.log("Cloudinary current config:", c.config());
+
+        const response = await c.uploader.upload(localFilePath, {
             resource_type: "auto"
         })
         fs.unlinkSync(localFilePath);
@@ -22,7 +18,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 
     } catch (error) {
         fs.unlinkSync(localFilePath);
-        return null;
+        return error;
     }
 }
 
