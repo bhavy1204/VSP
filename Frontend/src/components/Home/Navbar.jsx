@@ -9,7 +9,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 export default function Navbar() {
     return (
         <>
-            <header className='flex justify-between px-2 py-2 border-b-1 border-gray-500 items-center'>
+            <header className='flex justify-between px-2 py-2 border-gray-500 items-center bg-gray-900'>
                 <div className="static flex ml-3 gap-4 text-gray-300">
                     <div className="menu">
                         <button>

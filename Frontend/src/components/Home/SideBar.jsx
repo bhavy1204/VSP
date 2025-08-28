@@ -3,8 +3,10 @@ import { ArrowDownToLine, Scissors, ThumbsUp, House, SquarePlay, GalleryVertical
 export default function SideBar() {
     return (
         <>
-            <section className="w-1/7 text-gray-400 border-r-1 border-gray-500 h-screen overflow-y-auto no-scrollbar">
+            <section className="w-1/7 text-gray-400 border-r-1 border-gray-500 h-full overflow-y-auto no-scrollbar">
+
                 <div className="nav flex items-baseline px-3 py-3 gap-5 flex-col border-b-1 border-gray-500">
+
                     <div className="home flex items-center gap-2">
                         <House /> <p>Home</p>
                     </div>
@@ -14,8 +16,11 @@ export default function SideBar() {
                     <div className="subscription flex items-center gap-2">
                         <GalleryVerticalEnd /> <p>Subscriptions</p>
                     </div>
+
                 </div>
+
                 <div className="user-nav flex items-baseline px-3 py-3 gap-5 flex-col border-b-1 border-gray-500">
+
                     <div className="history flex items-center gap-2">
                         <History /> <p>History</p>
                     </div>
@@ -37,13 +42,19 @@ export default function SideBar() {
                     <div className="your-clips flex items-center gap-2">
                         <Scissors /> <p>Your-Clips</p>
                     </div>
+
                 </div>
+
                 <div className="channels flex items-baseline px-3 py-3 gap-5 flex-col border-b-1 border-gray-500">
+
                     <div className="channel-1 flex items-center gap-2">
                         <CircleUser /> <p>Channel 1</p>
                     </div>
+
                 </div>
+
                 <div className="features flex items-baseline px-3 py-3 gap-5 flex-col border-b-1 border-gray-500">
+
                     <div className="shopping flex items-center gap-2">
                         <ShoppingCart /> <p>Shopping</p>
                     </div>
@@ -74,8 +85,11 @@ export default function SideBar() {
                     <div className="podcast flex items-center gap-2">
                         <Podcast /> <p>Podcast</p>
                     </div>
+
                 </div>
+
                 <div className="maintainence flex items-baseline px-3 py-3 gap-5 flex-col border-b-1 border-gray-500">
+
                     <div className="settings flex items-center gap-2">
                         <Settings /> <p>Settings</p>
                     </div>
@@ -88,7 +102,9 @@ export default function SideBar() {
                     <div className="send-feedback flex items-center gap-2">
                         <MessageSquareText /> <p>Feedback</p>
                     </div>
+                    
                 </div>
+
             </section >
         </>
     )
