@@ -3,10 +3,22 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
 export default function Signup() {
+
     const [filename, setFilename] = useState("Upload Pfp");
     const [coverFile, setCoverFilename] = useState("Upload Cover");
     const fileInputRef = useRef(null);
     const coverInputRef = useRef(null);
+
+    const handleSuccess = async (credentialResponse) => {
+        try {
+            const res = await axios.post("http://localhost:3000/api/v1/auth/google/callback", {
+                 token: credentialResponse.credential,
+            });
+            console.log("Logged in:", res.data);
+        } catch (err) {
+            console.error("Login failed:", err);
+        }
+    }
 
     const fileInputChange = (e) => {
         if (e.target.files.length > 0) {
@@ -34,8 +46,6 @@ export default function Signup() {
 
 
     return (
-
-
         <>
             <div className="container grid place-items-center h-screen">
                 <div className="form flex flex-col items-center bg-gray-200 w-1/2 py-4 rounded-2xl">
@@ -74,12 +84,9 @@ export default function Signup() {
 
                     </form>
 
-                    <div className="SSO">
 
-                    </div>
-
-
-
+                    <GoogleLogin onSuccess={handleSuccess}
+                        onError={() => console.log("Login Failed")} />
                 </div>
             </div>
         </>
