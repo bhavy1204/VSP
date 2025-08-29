@@ -1,6 +1,6 @@
 import CardGrid from "./CardGrid"
-import Navbar from "./Navbar"
-import SideBar from "./SideBar"
+import Navbar from "../Navbar"
+import SideBar from "../SideBar"
 
 export default function HomePage() {
     return (
