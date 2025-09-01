@@ -22,23 +22,23 @@ export default function Navbar() {
                 </div>
                 <div className="search border border-white rounded-xl w-1/2 px-2 py-0.5">
                     <SearchIcon className='text-white' />
-                    <input type="text" className='w-[90%] focus:outline-none text-gray-300 ml-2' />
+                    <input type="text" className='w-[90%] focus:outline-none text-gray-300 ml-2'/>
                 </div>
                 <div className="actions flex items-center text-white gap-4">
-                    <div className="create">
+                    <a href='/create'>
                         <button className='flex items-center gap-2'>
                             <AddIcon fontSize='medium' /><p>Create</p>
                         </button>
-                    </div>
+                    </a>
                     <div className="notifications">
-                        <button onClick={console.log("ok")}>
+                        <a href='/notifications'>
                             <NotificationsIcon fontSize='medium' />
-                        </button>
+                        </a>
                     </div>
                     <div className="profike">
-                        <button>
+                        <a href='/signup'>
                             <PersonIcon fontSize='medium' />
-                        </button>
+                        </a>
                     </div>
                 </div>
             </header>

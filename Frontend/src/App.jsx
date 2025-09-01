@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import PageNotFound from './components/PageNotFound'
 import Signup from './components/user/Signup'
 import Login from './components/user/Login'
+import Dashboard from './components/user/Dashboard'
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
         <Route path='/home' element={<HomePage />} />
         <Route path='/signup' element={< Signup />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/dashboard' element={<Dashboard />} />
 
       </Routes>
     </>

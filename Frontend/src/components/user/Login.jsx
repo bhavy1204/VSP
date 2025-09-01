@@ -57,6 +57,11 @@ export default function Login() {
 
                         </div>
 
+                        <div className="signup flex flex-col items-center text-sm">
+                            <p>Don't have a account ?</p>
+                            <a href="/signup" className="text-blue-600">Signup here</a>
+                        </div>
+
                     </form>
 
 
