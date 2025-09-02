@@ -86,7 +86,7 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new APIError(400, "Username and email required");
     }
 
-    const user = User.findOne({ $and: [{ username }, { email }] });
+    const user = await User.findOne({ $and: [{ username }, { email }] });
 
     if (!user) {
         throw new APIError(404, "user does not exists");
@@ -95,12 +95,12 @@ const loginUser = asyncHandler(async (req, res) => {
     const isValidPassword = await user.isPasswordCorrect(password);
 
     if (!isValidPassword) {
-        throw new APIError(404, "Password incorrect");
+        throw new APIError(400, "Password incorrect");
     }
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
 
-    const loggedInUser = user.findById(user._id).select("-password -refreshToken");
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
     const options = {
         httpOnly: true,

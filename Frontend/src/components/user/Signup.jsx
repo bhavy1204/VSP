@@ -48,8 +48,15 @@ export default function Signup() {
             const res = await axios.post("http://localhost:3000/api/v1/users/register", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
+
             console.log(res);
-            navigate("/home")
+
+            const user= res.data.data;
+            const token= res.data.data;
+
+            localStorage.setItem("user", JSON.stringify(user));
+
+            navigate("/login")
         } catch (error) {
             console.log(error);
             alert("Something failed. Please try again in few minutes")
@@ -98,9 +105,9 @@ export default function Signup() {
 
                     <form action="" method="post" className="flex flex-col items-center gap-5 w-1/2" onSubmit={SignupSubmit}>
 
-                        <input type="text" placeholder="name" name="fullName" className="w-full border-b-1 px-2 py-1" onChange={handleChange} />
-                        <input type="text" placeholder="username" name="username" className="w-full border-b-1 px-2 py-1" onChange={handleChange} />
-                        <input type="email" placeholder="email" name="email" className="w-full border-b-1 px-2 py-1" onChange={handleChange} />
+                        <input type="text" placeholder="name" name="fullName" className="w-full border-b-1 px-2 py-1 focus:outline-none" autoComplete="off" onChange={handleChange} />
+                        <input type="text" placeholder="username" name="username" className="w-full border-b-1 px-2 py-1 focus:outline-none" autoComplete="off" onChange={handleChange} />
+                        <input type="email" placeholder="email" name="email" className="w-full border-b-1 px-2 py-1 focus:outline-none" autoComplete="off" onChange={handleChange} />
 
                         <button type="button" className="w-full border-b-1 px-2 py-1 text-left " onClick={handlePfpButtonClick}>
                             <span className="text-gray-500">{avatarName}</span>
@@ -112,7 +119,7 @@ export default function Signup() {
                         </button>
                         <input type="file" ref={coverInputRef} onChange={CoverInputChange} id="hiddenFileInput" className="hidden" name="coverImage" />
 
-                        <input type="text" placeholder="password" name="password" className="w-full border-b-1 px-2 py-1" onChange={handleChange} />
+                        <input type="text" placeholder="password focus:outline-none" autoComplete="off" name="password" className="w-full border-b-1 px-2 py-1" onChange={handleChange} />
 
 
                         <div className="actions flex w-full justify-between px-2 ">
@@ -130,7 +137,6 @@ export default function Signup() {
                             onError={() => console.log("Login Failed")} />
 
                     </form>
-
                 </div>
             </div>
         </>

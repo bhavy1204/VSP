@@ -1,53 +1,58 @@
+import axios from "axios";
 import { useRef, useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-    const [filename, setFilename] = useState("Upload Pfp");
-    const [coverFile, setCoverFilename] = useState("Upload Cover");
-    const fileInputRef = useRef(null);
-    const coverInputRef = useRef(null);
 
-    const fileInputChange = (e) => {
-        if (e.target.files.length > 0) {
-            setFilename(e.target.files[0].name);
-        } else {
-            setFilename('Upload pfp')
+    const [form, setForm] = useState({ username: "", password: "", email: "" });
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value })
+    }
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        try {
+
+            const res = await axios.post("http://localhost:3000/api/v1/users/login", {
+                "email": form.email,
+                "password": form.password,
+                "username": form.username,
+            });
+            console.log(res);
+
+            const user = res.data.data;
+
+            // localStorage.setItem("user", JSON.stringify(user));
+
+            navigate("/home")
+
+        } catch (error) {
+            console.log(error);
+            alert("Some error while login. Please try in few minutes");
         }
-    }
 
-    const CoverInputChange = (e) => {
-        if (e.target.files.length > 0) {
-            setCoverFilename(e.target.files[0].name);
-        } else {
-            setCoverFilename('Upload cover')
-        }
     }
-
-    const handlePfpButtonClick = () => {
-        fileInputRef.current.click();
-    }
-
-    const handleCoverButtonClick = () => {
-        coverInputRef.current.click();
-    }
-
 
     return (
-
-
         <>
             <div className="container grid place-items-center h-screen">
                 <div className="form flex flex-col items-center bg-gray-200 w-1/2 py-4 rounded-2xl">
                     <h1 className="text-center text-4xl font-bold text-blue-800 mt-2">Login</h1>
                     <p className="text-center text-sm mt-1 mb-5">Welcome back</p>
 
-                    <form action="" method="post" className="flex flex-col items-center gap-5 w-1/2" onSubmit={(e) => e.preventDefault()}>
+                    <form action="" method="post" className="flex flex-col items-center gap-5 w-1/2" onSubmit={handleLogin}>
 
-                        <input type="email" placeholder="email" className="w-full border-b-1 px-2 py-1" />
+                        <input type="email" placeholder="email" name="email" className="w-full border-b-1 px-2 py-1 focus:outline-none" autoComplete="off" onChange={handleChange} />
 
-                        <input type="text" placeholder="password" className="w-full border-b-1 px-2 py-1" />
+                        <input type="text" placeholder="username" name="username" className="w-full border-b-1 px-2 py-1 focus:outline-none" autoComplete="off" onChange={handleChange} />
+
+                        <input type="text" placeholder="password" name="password" className="w-full border-b-1 px-2 py-1 focus:outline-none" autoComplete="off" onChange={handleChange} />
 
                         <div className="actions flex w-full justify-between px-2 ">
-                             <button type="button" className=" text-sm text-blue-600">
+                            <button type="button" className=" text-sm text-blue-600">
                                 forgot password?
                             </button>
 
@@ -63,10 +68,6 @@ export default function Login() {
                         </div>
 
                     </form>
-
-
-
-
                 </div>
             </div>
         </>

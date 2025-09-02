@@ -6,18 +6,22 @@ const uploadOnCloudinary = async (localFilePath) => {
         if (!localFilePath) {
             return null;
         }
-        console.log("CLOUDINARY API KEY in Cloudinary.js:", process.env.CLOUDINARY_API_KEY);
-        console.log("Cloudinary current config:", c.config());
-
         const response = await c.uploader.upload(localFilePath, {
             resource_type: "auto"
         })
-        fs.unlinkSync(localFilePath);
-        console.log(response);
+        try {
+            fs.unlinkSync(localFilePath); // cleanup
+        } catch (err) {
+            console.warn("File already deleted:", localFilePath);
+        }
         return response;
 
     } catch (error) {
-        fs.unlinkSync(localFilePath);
+        try {
+            fs.unlinkSync(localFilePath); // cleanup
+        } catch (err) {
+            console.warn("File already deleted:", localFilePath);
+        }
         return error;
     }
 }

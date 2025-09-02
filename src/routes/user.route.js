@@ -26,7 +26,7 @@ router.route("/logout").post(verifyJwt, logoutUser);
 
 router.route("/refreshToken").post(refereshToken);
 
-router.route("/chnagePassword").post(verifyJwt, changeCurrentPassword);
+router.route("/changePassword").post(verifyJwt, changeCurrentPassword);
 
 router.route("/curentUser").get(verifyJwt, getCurrentUser);
 
