@@ -1,11 +1,18 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { APIError } from "../utils/APIError.js";
 import { APIResponse } from "../utils/APIResponse.js";
-import mongoose from "mongoose";
-import { User } from "../models/user.model.js";
 import { Video } from "../models/video.model.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 
+const getAllPlatformVideo = asyncHandler( async(req,res)=>{
+    const page = 1, limit =10;
+
+    const result = await Video.find().select("title thumbnail views createdAt").skip((page-1) * limit ).limit(Number(limit));
+
+    return res.status(200).json(
+        new APIResponse(200, result, "All videos fetched")
+    )
+})
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const userId = req.user._id;
@@ -233,6 +240,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 })
 
 export {
+    getAllPlatformVideo,
     getAllVideos,
     publishVideo,
     getVideoById,

@@ -17,7 +17,7 @@ function App() {
         <Route path='/signup' element={< Signup />} />
         <Route path='/login' element={<Login />} />
         <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/videoPlaying' element={<VideoPlaying />} />
+        <Route path='/api/v1/video/get/:videoId' element={<VideoPlaying />} />
 
       </Routes>
     </>

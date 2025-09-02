@@ -1,21 +1,21 @@
-export default function VideoCard() {
+export default function VideoCard({title, views, thumbnail,upload,videoId}) {
     return (
         <>
-            <a href="/videoPlaying">
+            <a href={`api/v1/video/get/:${videoId}`} >
                 <div className="card-container m-4 bg-gray-900 rounded-2xl">
-                    <div className="thumbnail flex justify-center pt-2">
-                        <img src="thumbnail.webp" alt="" className="rounded-sm" />
+                    <div className="thumbnail flex justify-center px-0.5 pt-0.5">
+                        <img src={thumbnail} alt="" className="rounded-t-md" />
                     </div>
                     <div className="data">
                         <div className="title text-white flex justify-start px-4 py-1">
-                            Sample title
+                            {title}
                         </div>
-                        <div className="details flex justify-around px-2 py-2 text-gray-400">
-                            <div className="views">
-                                45k views
+                        <div className="details flex justify-between px-2 py-2 text-gray-400 text-sm font-thin">
+                            <div className="views ">
+                                {views}
                             </div>
                             <div className="uploadedAT">
-                                8 months ago
+                                {upload} months ago
                             </div>
                         </div>
                     </div>
