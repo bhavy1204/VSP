@@ -1,9 +1,9 @@
-import VideoCard from "./Videocard";
+import VideoCard from "./Videocard"
 
-export default function CardGrid({ videos = [] }) {
+export default function VerticalVideoCard({videos}) {
     return (
         <>
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="flex fllex-col">
                 {videos.length > 0 ? (
 
                     videos.map((v) => (
@@ -15,7 +15,7 @@ export default function CardGrid({ videos = [] }) {
                             views={v.views}
                             upload={v.createdAt}
                         />
-                    )) ): (
+                    ))) : (
                     <VideoCard
                         key={1}
                         videoId={1}

@@ -1,8 +1,28 @@
+import { useState } from "react";
 import Navbar from "../Navbar";
 import Commentscard from "./Commentscard";
-import VideoCard from "./Videocard";
+import VerticalVideoCard from "./VerticalVideoCard";
+import { useEffect } from "react";
 
 export default function VideoPlaying({link,desc}) {
+    const [videos, setVideos] = useState([]);
+
+    useEffect(() => {
+        const fetchVideos = async () => {
+            try {
+
+                const res = axios.get("http://localhost:3000/api/v1/video/get/all");
+                setVideos(res.data);
+            } catch (error) {
+                console.log(error);
+                alert("Error while displaying videos")
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchVideos()
+    }, []);
+
     return (
         <>
             <Navbar />
@@ -31,17 +51,7 @@ export default function VideoPlaying({link,desc}) {
                     </div>
                 </div>
                 <div className="recommndation w-1/4 overflow-y-scroll no-scrollbar">
-                    <div className="flex flex-col">
-                        <VideoCard />
-                        <VideoCard />
-                        <VideoCard />
-                        <VideoCard />
-                        <VideoCard />
-                        <VideoCard />
-                        <VideoCard />
-                        <VideoCard />
-                        <VideoCard />
-                    </div>
+                    <VerticalVideoCard videos={videos}/>
                 </div>
             </div>
         </>
