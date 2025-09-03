@@ -3,7 +3,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"
 
-export default function Signup() {
+export default function Signup({setUser}) {
 
     const [avatarName, setFilename] = useState("Upload Pfp");
     const [coverImageName, setCoverFilename] = useState("Upload Cover");
@@ -51,10 +51,7 @@ export default function Signup() {
 
             console.log(res);
 
-            const user= res.data.data;
-            const token= res.data.data;
-
-            localStorage.setItem("user", JSON.stringify(user));
+            setUser(res.data)
 
             navigate("/login")
         } catch (error) {

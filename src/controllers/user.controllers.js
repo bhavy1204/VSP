@@ -80,6 +80,7 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 const loginUser = asyncHandler(async (req, res) => {
+    console.log("login IN HIT");
     const { email, username, password } = req.body;
 
     if (!(email && username)) {
@@ -100,11 +101,14 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
 
-    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken ");
+
+    console.log(loggedInUser);
 
     const options = {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
     }
 
     return res
@@ -112,7 +116,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(
-            new APIResponse(200, { user: loggedInUser, accessToken, refreshToken }, "UserLoggenIn successfully")
+            new APIResponse(200, { user: loggedInUser }, "UserLoggenIn successfully")
         )
 
 })

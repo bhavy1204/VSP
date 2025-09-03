@@ -4,7 +4,7 @@ import SideBar from "../SideBar"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-export default function HomePage() {
+export default function HomePage({user}) {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -29,7 +29,7 @@ export default function HomePage() {
     return (
         <>
             <div className="flex flex-col h-screen">
-                <Navbar />
+                <Navbar user={user}/>
                 <div className="flex flex-1 overflow-hidden no-scrollbar">
                     <SideBar />
                     <div className="flex-1 p-4 overflow-y-auto no-scrollbar">

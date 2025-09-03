@@ -6,17 +6,19 @@ import Signup from './components/user/Signup'
 import Login from './components/user/Login'
 import Dashboard from './components/user/Dashboard'
 import VideoPlaying from './components/Home/VideoPlaying'
+import { useState } from 'react'
 
 function App() {
+  const [user, setUser] = useState(null);
 
   return (
     <>
       <Routes>
         <Route path='*' element={<PageNotFound />} />
-        <Route path='/home' element={<HomePage />} />
-        <Route path='/signup' element={< Signup />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/home' element={<HomePage user={user}/>} />
+        <Route path='/signup' element={< Signup setUser={setUser} />} />
+        <Route path='/login' element={<Login setUser={setUser} />} />
+        <Route path='/dashboard' element={<Dashboard  />} />
         <Route path='/api/v1/video/get/:videoId' element={<VideoPlaying />} />
 
       </Routes>

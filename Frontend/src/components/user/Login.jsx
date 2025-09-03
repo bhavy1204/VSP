@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
+import api from "../../axios";
 
-export default function Login() {
+export default function Login({setUser}) {
 
     const [form, setForm] = useState({ username: "", password: "", email: "" });
+
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -16,16 +18,13 @@ export default function Login() {
 
         try {
 
-            const res = await axios.post("http://localhost:3000/api/v1/users/login", {
+            const res = await api.post("/v1/users/login", {
                 "email": form.email,
                 "password": form.password,
                 "username": form.username,
             });
-            console.log(res);
-
-            const user = res.data.data;
-
-            // localStorage.setItem("user", JSON.stringify(user));
+            
+            setUser(res.data);
 
             navigate("/home")
 

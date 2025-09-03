@@ -7,15 +7,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import { useEffect, useState } from 'react';
 
 
-export default function Navbar() {
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser  && storedUser !== "undefined") {
-            setUser(JSON.parse(storedUser))
-        }
-    }, []);
+export default function Navbar({user}) {
 
     return (
         <>
