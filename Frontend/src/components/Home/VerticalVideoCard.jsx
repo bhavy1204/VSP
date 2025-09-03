@@ -1,6 +1,6 @@
 import VideoCard from "./Videocard"
 
-export default function VerticalVideoCard({videos}) {
+export default function VerticalVideoCard({videos=[]}) {
     return (
         <>
             <div className="flex fllex-col">
