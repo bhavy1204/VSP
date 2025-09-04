@@ -4,11 +4,17 @@ import SideBar from "../SideBar"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-export default function HomePage({user}) {
+export default function HomePage({ user }) {
+    // For videos
     const [videos, setVideos] = useState([]);
+    // FOr loader
     const [loading, setLoading] = useState(true);
+    // Side bar 
+    const [sidebar, setIsSidebar] = useState(true);
 
+    const toggleSidebar = () => setIsSidebar(prev => !prev);
 
+    // Fetching all videos
     useEffect(() => {
         const fetchVideos = async () => {
             try {
@@ -29,9 +35,9 @@ export default function HomePage({user}) {
     return (
         <>
             <div className="flex flex-col h-screen">
-                <Navbar user={user}/>
+                <Navbar user={user} toggleSidebar={toggleSidebar} />
                 <div className="flex flex-1 overflow-hidden no-scrollbar">
-                    <SideBar />
+                    <SideBar sidebar={sidebar}/>
                     <div className="flex-1 p-4 overflow-y-auto no-scrollbar">
                         {loading ? (
                             <p>Loading videos...</p>

@@ -21,8 +21,8 @@ export default function CardGrid({ videos = [] }) {
                         videoId={1}
                         title={"sample video title"}
                         thumbnail={"https://res.cloudinary.com/dr2tagfk8/image/upload/v1756790643/404_ytn6mq.webp"}
-                        views={1000}
-                        upload={9}
+                        views={"N/A"}
+                        upload={"N/A"}
                     />
                 )}
             </div>

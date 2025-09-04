@@ -1,9 +1,9 @@
 import { ArrowDownToLine, Scissors, ThumbsUp, House, SquarePlay, GalleryVerticalEnd, Music, ShoppingCart, Clapperboard, Radio, Gamepad2, Newspaper, Trophy, Book, Shirt, Podcast, Settings, Flag, MessageSquareText, MessageCircleQuestionMark, Clock, TvMinimalPlay, ListVideo, History, CircleUser } from 'lucide-react';
 
-export default function SideBar() {
+export default function SideBar({ sidebar }) {
     return (
         <>
-            <section className="w-1/7 text-gray-400 border-r-1 border-gray-500 h-full overflow-y-auto no-scrollbar">
+            <section className={` text-gray-400 border-r border-gray-500 h-full overflow-y-auto no-scrollbar ${sidebar ? "w-1/7 " : "w-0 border-r-0"}  `}>
 
                 <div className="nav flex items-baseline px-3 py-3 gap-5 flex-col border-b-1 border-gray-500">
 
@@ -102,7 +102,7 @@ export default function SideBar() {
                     <div className="send-feedback flex items-center gap-2">
                         <MessageSquareText /> <p>Feedback</p>
                     </div>
-                    
+
                 </div>
 
             </section >

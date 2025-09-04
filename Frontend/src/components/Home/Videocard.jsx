@@ -1,5 +1,4 @@
 export default function VideoCard({title, views, thumbnail,upload,videoId}) {
-    console.log("UPLOAD >> ", upload)
     return (
         <>
             <a href={`api/v1/video/get/:${videoId}`} >

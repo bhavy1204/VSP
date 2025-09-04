@@ -6,6 +6,7 @@ import Signup from './components/user/Signup'
 import Login from './components/user/Login'
 import Dashboard from './components/user/Dashboard'
 import VideoPlaying from './components/Home/VideoPlaying'
+import Loader from './components/utils/Loader'
 import { useState } from 'react'
 
 function App() {

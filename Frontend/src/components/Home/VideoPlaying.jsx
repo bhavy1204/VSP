@@ -28,7 +28,6 @@ export default function VideoPlaying({desc, user}) {
         const fetchVideoData = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/api/v1/video/get/${videoId}`, { withCredentials: true });
-                console.log(res.data.data);
                 setMainVideoData(res.data.data);
             } catch (error) {
                 console.log(error);
@@ -84,7 +83,7 @@ export default function VideoPlaying({desc, user}) {
                         className="w-full mb-4"
                     >
                     </video>
-                    <div className="interact flex justify-between px-4 items-center text-gray-300 overflow-x-auto ">
+                    <div className="interact flex justify-between px-4 items-center text-gray-300 overflow-x-auto no-scrollbar ">
                         <div className="channel flex gap-6 items-center">
                             <div className=" flex items-center  py-1.5 text-lg gap-2">
                                 <img src="/404.webp" alt="" className="h-10 w-10 border rounded-full" />
