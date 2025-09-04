@@ -5,7 +5,6 @@ export default function CardGrid({ videos = [] }) {
         <>
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {videos.length > 0 ? (
-
                     videos.map((v) => (
                         <VideoCard
                             key={v._id}

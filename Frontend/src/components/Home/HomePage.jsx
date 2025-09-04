@@ -12,9 +12,9 @@ export default function HomePage({user}) {
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-
-                const res = axios.get("http://localhost:3000/api/v1/video/get/all");
-                setVideos(res.data);
+                const res = await axios.get("http://localhost:3000/api/v1/video/get/all");
+                console.log(res)
+                setVideos(res.data.data);
             } catch (error) {
                 console.log(error);
                 alert("Error while displaying videos")
