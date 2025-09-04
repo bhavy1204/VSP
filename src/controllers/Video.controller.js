@@ -4,10 +4,10 @@ import { APIResponse } from "../utils/APIResponse.js";
 import { Video } from "../models/video.model.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 
-const getAllPlatformVideo = asyncHandler( async(req,res)=>{
-    const page = 1, limit =10;
+const getAllPlatformVideo = asyncHandler(async (req, res) => {
+    const page = 1, limit = 10;
 
-    const result = await Video.find().select("title thumbnail views createdAt").skip((page-1) * limit ).limit(Number(limit));
+    const result = await Video.find().select("title thumbnail views createdAt").skip((page - 1) * limit).limit(Number(limit));
 
     return res.status(200).json(
         new APIResponse(200, result, "All videos fetched")
@@ -76,10 +76,12 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new APIError(400, "video ID required")
     }
 
-    const result = await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } }, { new: true });
+    const rawId = req.params.videoId.replace(":", "");
+
+    const result = await Video.findByIdAndUpdate(rawId, { $inc: { views: 1 } }, { new: true });
 
     if (!result) {
-        throw new APIError(404, "No such video found")
+        throw new APIError(404, "No such video found id")
     }
 
     return res.status(200).json(
@@ -234,7 +236,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     }
 
     return res.status(200).json(
-        new APIResponse(200, result, "publish status toggled" )
+        new APIResponse(200, result, "publish status toggled")
     )
 
 })

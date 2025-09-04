@@ -1,11 +1,12 @@
 import VideoCard from "./Videocard"
+import { formatDistanceToNow, formatDistanceToNowStrict} from "date-fns";
 
 export default function VerticalVideoCard({videos=[]}) {
     return (
         <>
-            <div className="flex fllex-col">
+            <div className="flex flex-col">
                 {videos.length > 0 ? (
-
+                    
                     videos.map((v) => (
                         <VideoCard
                             key={v._id}
@@ -13,7 +14,7 @@ export default function VerticalVideoCard({videos=[]}) {
                             title={v.title}
                             thumbnail={v.thumbnail}
                             views={v.views}
-                            upload={v.createdAt}
+                            upload={formatDistanceToNow(new Date(v.createdAt), { addSuffix: true })}
                         />
                     ))) : (
                     <VideoCard

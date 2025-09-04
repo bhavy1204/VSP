@@ -20,7 +20,7 @@ router.route("/v1").get(getAllVideos).post( verifyJwt,
 
 router.route("/get/all").get(getAllPlatformVideo);
 
-router.route("/get/:videoId").put(getVideoById);
+router.route("/get/:videoId").get(getVideoById);
 
 router.route("/update/v/:videoId").put(verifyJwt, updateVideo);
 

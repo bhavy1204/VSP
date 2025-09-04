@@ -1,8 +1,8 @@
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import Navbar from '../Navbar';
 
-export default function UserNav() {
+export default function UserNav({user}) {
     return (
-        <Navbar/>
+        <Navbar user={user}/>
     )
 }

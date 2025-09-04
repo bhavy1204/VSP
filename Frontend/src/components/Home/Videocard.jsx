@@ -1,4 +1,5 @@
 export default function VideoCard({title, views, thumbnail,upload,videoId}) {
+    console.log("UPLOAD >> ", upload)
     return (
         <>
             <a href={`api/v1/video/get/:${videoId}`} >
@@ -12,10 +13,10 @@ export default function VideoCard({title, views, thumbnail,upload,videoId}) {
                         </div>
                         <div className="details flex justify-between px-2 py-2 text-gray-400 text-sm font-thin">
                             <div className="views ">
-                                {views}
+                                {views} views
                             </div>
                             <div className="uploadedAT">
-                                {upload} months ago
+                                {upload}
                             </div>
                         </div>
                     </div>

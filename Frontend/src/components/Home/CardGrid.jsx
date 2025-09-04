@@ -1,4 +1,5 @@
 import VideoCard from "./Videocard";
+import { formatDistanceToNow } from "date-fns";
 
 export default function CardGrid({ videos = [] }) {
     return (
@@ -12,7 +13,7 @@ export default function CardGrid({ videos = [] }) {
                             title={v.title}
                             thumbnail={v.thumbnail}
                             views={v.views}
-                            upload={v.createdAt}
+                            upload={formatDistanceToNow(new Date(v.createdAt), { addSuffix: true })}
                         />
                     )) ): (
                     <VideoCard

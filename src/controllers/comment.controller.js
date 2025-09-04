@@ -11,7 +11,9 @@ const getVideoComment = asyncHandler(async (req, res) => {
     const pageNum = Number(page);
     const limitNum = Number(limit);
 
-    const comments = await Comment.find({ video: videoId }).skip((pageNum - 1) * limitNum).limit(Number(limitNum));
+    const rawId = req.params.videoId.replace(":", "");
+
+    const comments = await Comment.find({ video: rawId }).skip((pageNum - 1) * limitNum).limit(Number(limitNum));
 
     return res.status(200).json(
         new APIResponse(200, comments, "comments fetch successfully")

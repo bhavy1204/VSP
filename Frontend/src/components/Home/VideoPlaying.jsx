@@ -7,8 +7,7 @@ import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon } from "lucid
 import CommentsContainer from "./CommentsContainer";
 import axios from "axios";
 
-export default function VideoPlaying({desc}) {
-
+export default function VideoPlaying({desc, user}) {
     const {videoId} = useParams();
 
     // side side video variables
@@ -16,18 +15,21 @@ export default function VideoPlaying({desc}) {
     const [loading, setLoading] = useState(true);
 
     // video data var
-    const [videoData, setVideoData] = useState();
+    const [mainVideoData, setMainVideoData] = useState();
 
     // comments variable
     const [comment, setComment] = useState([]);
+
+    // Likes
+    const [likes, setLikes] = useState(20);
 
     // For video data
      useEffect(() => {
         const fetchVideoData = async () => {
             try {
-                const res = axios.get(`http://localhost:3000/api/v1/video/get/${videoId}`);
-                console.log(res);
-                setVideoData(res.data);
+                const res = await axios.get(`http://localhost:3000/api/v1/video/get/${videoId}`, { withCredentials: true });
+                console.log(res.data.data);
+                setMainVideoData(res.data.data);
             } catch (error) {
                 console.log(error);
                 alert("Error while showing video data")
@@ -36,15 +38,15 @@ export default function VideoPlaying({desc}) {
             }
         }
         fetchVideoData()
-    }, [comment]);
+    }, []);
 
     // For comments
      useEffect(() => {
         const fetchComments = async () => {
             try {
-                const res = axios.get(`http://localhost:3000/api/v1/comment/v/${videoId}`);
+                const res = await axios.get(`http://localhost:3000/api/v1/comment/v/${videoId}`, { withCredentials: true });
                 console.log(res);
-                setComment(res.data);
+                setComment(res.data.data);
             } catch (error) {
                 console.log(error);
                 alert("Error while displaying comments")
@@ -59,9 +61,9 @@ export default function VideoPlaying({desc}) {
      useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const res = axios.get(`http://localhost:3000/api/v1/video/get/all`);
+                const res = await axios.get(`http://localhost:3000/api/v1/video/get/all`, { withCredentials: true });
                 console.log(res);
-                setVideos(res.data);
+                setVideos(res.data.data);
             } catch (error) {
                 console.log(error);
                 alert("Error while displaying comments")
@@ -72,14 +74,12 @@ export default function VideoPlaying({desc}) {
         fetchVideos()
     }, [comment]);
 
-    let likes = 10;
-
     return (
         <>
             <Navbar />
             <div className="main flex h-screen">
                 <div className="video flex-1 w-3/4 pb-12 pt-6 px-6 overflow-y-auto no-scrollbar bg-gray-900">
-                    <video src="https://res.cloudinary.com/dr2tagfk8/video/upload/v1756791160/istockphoto-1253263447-640_adpp_is_ziugl4.mp4"
+                    <video src={mainVideoData?.videoFile || "https://res.cloudinary.com/dr2tagfk8/video/upload/v1756791160/istockphoto-1253263447-640_adpp_is_ziugl4.mp4"}
                         controls
                         className="w-full mb-4"
                     >
@@ -119,14 +119,14 @@ export default function VideoPlaying({desc}) {
                         </div>
                     </div>
                     <div className="description bg-gray-900 text-gray-500 px-4">
-                        <p>{desc}</p>
+                        <p>{mainVideoData?.description }</p>
                     </div>
                     <div className="comments my-4 p-2 rounded-2xl">
                         <div className="text-white font-semibold text-2xl border-b py-2">Comments...</div>
                         <CommentsContainer comments={comment} />
                     </div>
                 </div>
-                <div className="recommndation w-1/4 overflow-y-scroll no-scrollbar">
+                <div className="recommndation w-1/4 overflow-y-scroll no-scrollbar flex-col flex">
                     <VerticalVideoCard videos={videos} />
                 </div>
             </div>

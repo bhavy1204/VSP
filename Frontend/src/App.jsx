@@ -18,8 +18,8 @@ function App() {
         <Route path='/home' element={<HomePage user={user} />} />
         <Route path='/signup' element={< Signup setUser={setUser} />} />
         <Route path='/login' element={<Login setUser={setUser} />} />
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/api/v1/video/get/:videoId' element={<VideoPlaying />} />
+        <Route path='/dashboard' element={<Dashboard user={user}/>} />
+        <Route path='/api/v1/video/get/:videoId' element={<VideoPlaying user={user}/>} />
 
       </Routes>
     </>
