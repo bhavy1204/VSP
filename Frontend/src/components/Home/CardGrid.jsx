@@ -1,7 +1,9 @@
 import VideoCard from "./Videocard";
 import { formatDistanceToNow } from "date-fns";
+import { useOutletContext } from "react-router-dom";
 
-export default function CardGrid({ videos = [] }) {
+export default function CardGrid() {
+    const {videos} = useOutletContext()
     return (
         <>
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">

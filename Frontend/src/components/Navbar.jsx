@@ -26,18 +26,18 @@ export default function Navbar({ user, toggleSidebar }) {
                     <input type="text" className='w-[90%] focus:outline-none text-gray-300 ml-2' />
                 </div>
                 <div className="actions flex items-center text-white gap-4">
-                    <a href='/create'>
+                    <a href={`${user? '/create' : '/signup'}`}>
                         <button className='flex items-center gap-2'>
                             <AddIcon fontSize='medium' /><p>Create</p>
                         </button>
                     </a>
                     <div className="notifications">
-                        <a href='/notifications'>
+                        <a href={`${user? '/notification' : '/signup'}`}>
                             <NotificationsIcon fontSize='medium' />
                         </a>
                     </div>
                     <div className="profike">
-                        <a href={`${user? '\dashboard' : 'signup'}`}>
+                        <a href={`${user? '/dashboard' : '/signup'}`}>
                             {user ?
                                 <img src={user.avatar} alt="" className='h-10 rounded-full w-10' />
                                 :

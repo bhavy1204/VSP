@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom"
+
 export default function VideoCard({title, views, thumbnail,upload,videoId}) {
     return (
         <>
-            <a href={`api/v1/video/get/:${videoId}`} >
+            <Link to={`/api/v1/video/get/:${videoId}`} >
                 <div className="card-container m-4 bg-gray-900 rounded-2xl">
                     <div className="thumbnail flex justify-center px-0.5 pt-0.5">
                         <img src={thumbnail} alt="" className="rounded-t-md" />
@@ -20,7 +22,7 @@ export default function VideoCard({title, views, thumbnail,upload,videoId}) {
                         </div>
                     </div>
                 </div>
-            </a>
+            </Link>
         </>
     )
 }
