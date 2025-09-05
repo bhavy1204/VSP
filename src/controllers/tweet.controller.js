@@ -3,6 +3,14 @@ import { APIError } from "../utils/APIError.js";
 import { APIResponse } from "../utils/APIResponse.js";
 import { Tweet } from "../models/tweet.model.js"
 
+const getAllTweet = asyncHandler(async(req,res)=>{
+    const result = await Tweet.find();
+
+    return res.status(200).json(
+        new APIResponse(200, result, "all tweets fetched")
+    )
+})
+
 const createTweet = asyncHandler(async (req, res) => {
     const { content } = req.body;
     const userId = req.user._id;
@@ -73,6 +81,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
 })
 
 export {
+    getAllTweet,
     createTweet,
     getUserTweet,
     updateTweet,

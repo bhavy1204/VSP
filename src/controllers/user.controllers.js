@@ -105,16 +105,27 @@ const loginUser = asyncHandler(async (req, res) => {
 
     console.log(loggedInUser);
 
-    const options = {
+    const accessTokenExpiry = 15 * 60 * 1000;        // 15 minutes
+    const refreshTokenExpiry = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+    const accessOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-    }
+        maxAge: accessTokenExpiry,  //make it persistent
+    };
+
+    const refreshOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: refreshTokenExpiry, //longer lifespan
+    };
 
     return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
+        .cookie("accessToken", accessToken, accessOptions)
+        .cookie("refreshToken", refreshToken, refreshOptions)
         .json(
             new APIResponse(200, { user: loggedInUser }, "UserLoggenIn successfully")
         )
