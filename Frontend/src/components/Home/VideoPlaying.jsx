@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Navbar from "../Navbar";
-import VerticalVideoCard from "./VerticalVideoCard";
+import Navbar from "./Navbar";
+import VerticalVideoCard from "./Videos/VerticalVideoCard.jsx";
 import { useEffect} from "react";
 import {useParams} from "react-router-dom"
 import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon } from "lucide-react";

@@ -4,7 +4,7 @@ export default function TweetCard({ creator, content,createdAt}) {
     return (
         <>
             <Link to={`/api/v1/user/c/${creator}`}>
-                <div className="card-container m-4 bg-gray-900 rounded-2xl h-40 flex flex-col overflow-y-auto no-scrollbar">
+                <div className="card-container m-4 bg-gray-900 rounded-2xl h-11/12 flex flex-col overflow-y-auto no-scrollbar">
                     <div className="thumbnail flex justify-start mx-3  pt-3 border-b text-gray-500">
                         <h2>{creator}</h2>
                     </div>

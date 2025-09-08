@@ -4,9 +4,16 @@ import api from '../../axios';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function UserDashboardSideBar({user}) {
+export default function UserDashboardSideBar({user, setHistory, setLikedVideo, setLikedPost, setSubscription, setplaylist}) {
 
     const navigate = useNavigate();
+
+    const handleHistory = async () =>{
+        const res = localStorage.getItem("user")?.watchHistory || api.get("/watchHistory");
+        navigate('/dashboard/history');
+    }
+
+
     const handleLogout = async () => {
         localStorage.removeItem("user")
         const res = await api.post("/v1/users/logout")

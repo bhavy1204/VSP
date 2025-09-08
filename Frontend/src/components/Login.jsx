@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import api from "../../axios";
+import api from "../axios";
 
 export default function Login({setUser, setAvatar}) {
 
@@ -30,7 +30,7 @@ export default function Login({setUser, setAvatar}) {
             
             setUser(res.data.data.user || localStorage.getItem("user"));
 
-            navigate("/home")
+            navigate("/home/videos")
 
         } catch (error) {
             console.log(error);
