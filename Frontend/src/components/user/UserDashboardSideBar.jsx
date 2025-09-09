@@ -3,19 +3,26 @@ import api from '../../axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../features/authSlice';
+import { Links } from 'react-router-dom';
 
 
-export default function UserDashboardSideBar({ setHistoryVideos, setLikedVideo, setLikedPost, setSubscription, setplaylist}) {
+
+export default function UserDashboardSideBar() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const handleHistory = async () =>{
-        const res = localStorage.getItem("user")?.watchHistory || api.get("/watchHistory");
-        setHistoryVideos(res);
+    // My videos
+    const handleMyVideos = async () => {
+        window.location.href = "/dashboard/myVideos"
+    }
+
+    // history
+    const handleHistory = async () => {
         window.location.href = "/dashboard/history";
     }
 
+    // logout
     const handleLogout = async () => {
         localStorage.removeItem("user")
         dispatch(logout())
@@ -29,28 +36,28 @@ export default function UserDashboardSideBar({ setHistoryVideos, setLikedVideo, 
         <>
             <section className="h-full border-r-1 border-gray-500 w-1/7 text-gray-500 px-3 py-3">
                 <div className="platform flex flex-col gap-5 ">
-                    <div className="myVideos flex gap-2">
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleMyVideos}>
                         <FilePlay /> My Videos
                     </div>
-                    <div className="myVideos flex gap-2">
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
                         <StickyNote /> My posts
                     </div>
-                    <div className="myVideos flex gap-2" onClick={handleHistory}>
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
                         <History /> History
                     </div>
-                    <div className="myVideos flex gap-2">
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
                         <Heart /> Liked video
                     </div>
-                    <div className="myVideos flex gap-2">
+                    <div className="myVideos flex gap-2 hover:text-cyan-600" onClick={handleHistory}>
                         <ThumbsUp /> liked post
                     </div>
-                    <div className="myVideos flex gap-2">
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
                         <CircleUser /> My Subscriptions
                     </div>
-                    <div className="myVideos flex gap-2">
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
                         <ListVideo /> My playlist
                     </div>
-                    <div className="myVideos flex gap-2" onClick={handleLogout}>
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleLogout}>
                         <LogOut /> Logout
                     </div>
                 </div>
