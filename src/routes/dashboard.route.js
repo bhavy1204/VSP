@@ -5,6 +5,6 @@ import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.route("/channelStat").get(verifyJwt, viewChannelStat);
-router.route("/getChannelVideo").get(verifyJwt, getChannelVideos);
+router.route("/getChannelVideo/:channelId").get(verifyJwt, getChannelVideos);
 
 export default router;

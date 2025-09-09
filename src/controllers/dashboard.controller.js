@@ -111,7 +111,7 @@ const viewChannelStat = asyncHandler(async (req, res) => {
 
 const getChannelVideos = asyncHandler(async (req, res) => {
     // All videos uploaded by channel
-    const {channelId} = req.body;
+    const {channelId} = req.params;
 
     if (!channelId) {
         throw new APIError(400, "channel id required");
