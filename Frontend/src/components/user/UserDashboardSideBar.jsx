@@ -1,25 +1,29 @@
 import { ArrowDownToLine, Scissors, ThumbsUp, House, SquarePlay, GalleryVerticalEnd, Music, ShoppingCart, Clapperboard, Radio, Gamepad2, Newspaper, Trophy, Book, Shirt, Podcast, Settings, Flag, MessageSquareText, MessageCircleQuestionMark, LogOut, Clock, TvMinimalPlay, ListVideo, History, CircleUser, FilePlay, StickyNote, Heart } from 'lucide-react';
-import axios from 'axios';
 import api from '../../axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../features/authSlice';
 
 
-export default function UserDashboardSideBar({user, setHistory, setLikedVideo, setLikedPost, setSubscription, setplaylist}) {
+export default function UserDashboardSideBar({ setHistoryVideos, setLikedVideo, setLikedPost, setSubscription, setplaylist}) {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleHistory = async () =>{
         const res = localStorage.getItem("user")?.watchHistory || api.get("/watchHistory");
-        navigate('/dashboard/history');
+        setHistoryVideos(res);
+        window.location.href = "/dashboard/history";
     }
-
 
     const handleLogout = async () => {
         localStorage.removeItem("user")
+        dispatch(logout())
         const res = await api.post("/v1/users/logout")
         console.log(res);
-        window.location.href = "/home";
+        window.location.href = "/home/videos";
     }
+
 
     return (
         <>
@@ -31,7 +35,7 @@ export default function UserDashboardSideBar({user, setHistory, setLikedVideo, s
                     <div className="myVideos flex gap-2">
                         <StickyNote /> My posts
                     </div>
-                    <div className="myVideos flex gap-2">
+                    <div className="myVideos flex gap-2" onClick={handleHistory}>
                         <History /> History
                     </div>
                     <div className="myVideos flex gap-2">

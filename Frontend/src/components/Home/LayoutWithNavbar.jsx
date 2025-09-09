@@ -1,4 +1,4 @@
-import CardGrid from "../Home/Videos/CardGrid"
+import CardGrid from "./Videos/CardGrid"
 import Navbar from "./Navbar"
 import SideBar from "./SideBar"
 import axios from "axios"

@@ -2,10 +2,16 @@ import axios from "axios";
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import api from "../axios";
+import { setUser } from "../features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function Login({setUser, setAvatar}) {
+export default function Login() {
 
     const [form, setForm] = useState({ username: "", password: "", email: "" });
+
+    const { user, status } = useSelector((state) => state.auth);
+
+    const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
@@ -24,11 +30,13 @@ export default function Login({setUser, setAvatar}) {
                 "username": form.username,
             });
 
-            console.log(res.data.data.user)
+            console.log("User => ", res.data.data.user);
 
-            localStorage.setItem("user",JSON.stringify(res.data.data.user));
-            
-            setUser(res.data.data.user || localStorage.getItem("user"));
+            localStorage.setItem("user", JSON.stringify(res.data.data.user));
+
+            dispatch(setUser(res.data.data.user));
+            console.log("Dispatched user:", user);
+            console.log("Dispatched status:", status);
 
             navigate("/home/videos")
 

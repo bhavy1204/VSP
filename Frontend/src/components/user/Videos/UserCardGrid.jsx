@@ -1,15 +1,15 @@
-import VideoCard from "./Videocard";
+import UserVideoCard from "./UserVideocard";
 import { formatDistanceToNow } from "date-fns";
 import { useOutletContext } from "react-router-dom";
 
-export default function CardGrid() {
+export default function UserCardGrid() {
     const {videos} = useOutletContext()
     return (
         <>
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {videos.length > 0 ? (
                     videos.map((v) => (
-                        <VideoCard
+                        <UserVideoCard
                             key={v._id}
                             videoId={v._id}
                             title={v.title}
@@ -18,7 +18,7 @@ export default function CardGrid() {
                             upload={formatDistanceToNow(new Date(v.createdAt), { addSuffix: true })}
                         />
                     )) ): (
-                    <VideoCard
+                    <UserVideoCard
                         key={1}
                         videoId={1}
                         title={"sample video title"}

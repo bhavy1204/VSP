@@ -1,13 +1,14 @@
-import { useContext } from "react"
-import VideoCard from "../../Home/Videos/Videocard";
-import CardGrid from "../../Home/Videos/CardGrid";
-import { Outlet } from "react-router-dom";
+import UserCardGrid from "../Videos/UserCardGrid.jsx";
+import {useVideos} from "../VideoProvider";
 
 export default function History() {
-    const { history } = useContext();
+
+    // const {historyVideos} = useVideos();
+
     return (
         <>
-            <Outlet></Outlet>
+            <h2>Demo </h2>
+            {/* <UserCardGrid videos={historyVideos}/> */}
         </>
     )
 }

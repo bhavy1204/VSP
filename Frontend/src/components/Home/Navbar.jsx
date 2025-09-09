@@ -4,9 +4,19 @@ import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchUser} from '../../features/authSlice';
+import { useEffect } from 'react';
 
 
-export default function Navbar({ user, toggleSidebar }) {
+export default function Navbar({ toggleSidebar }) {
+
+    const dispatch = useDispatch();
+    const { user, status } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        dispatch(fetchUser());
+    }, [dispatch]);
 
     return (
         <>
@@ -26,18 +36,18 @@ export default function Navbar({ user, toggleSidebar }) {
                     <input type="text" className='w-[90%] focus:outline-none text-gray-300 ml-2' />
                 </div>
                 <div className="actions flex items-center text-white gap-4">
-                    <a href={`${user? '/create' : '/signup'}`}>
+                    <a href={`${user ? '/create' : '/signup'}`}>
                         <button className='flex items-center gap-2'>
                             <AddIcon fontSize='medium' /><p>Create</p>
                         </button>
                     </a>
                     <div className="notifications">
-                        <a href={`${user? '/notification' : '/signup'}`}>
+                        <a href={`${user ? '/notification' : '/signup'}`}>
                             <NotificationsIcon fontSize='medium' />
                         </a>
                     </div>
                     <div className="profike">
-                        <a href={`${user? '/dashboard' : '/signup'}`}>
+                        <a href={`${user ? '/dashboard' : '/signup'}`}>
                             {user ?
                                 <img src={user.avatar} alt="" className='h-10 rounded-full w-10' />
                                 :
