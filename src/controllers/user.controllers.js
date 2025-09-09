@@ -132,6 +132,28 @@ const loginUser = asyncHandler(async (req, res) => {
 
 })
 
+const authMe = asyncHandler(async (req, res) => {
+
+    const token = req.cookies?.accessToken || req.headers["authorization"]?.split(" ")[1];
+
+    if (!token) {
+        throw new APIError(404, "Token required")
+    }
+
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    const user = await User.findById(decoded?._id).select("-password");
+
+    if (!user) {
+        throw new APIError(404, "No such user found")
+    }
+
+    res.status(200).json(
+        new APIResponse(200, user, "user authenticated")
+    );
+
+})
+
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(req.user._id, {
         $set: {
@@ -160,7 +182,7 @@ const refereshToken = asyncHandler(async (req, res) => {
 
     const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
 
-    const user = await User.findById(decodedToken?._id);
+    const user = await User.findById(decodedToken?._id).select("-password");
 
     if (!user) {
         throw new APIError(401, "Invalid token")
@@ -413,6 +435,7 @@ const getWAtchHistory = asyncHandler(async (req, res) => {
 })
 
 export {
+    authMe,
     registerUser,
     loginUser,
     logoutUser,
