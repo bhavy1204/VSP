@@ -6,7 +6,7 @@ export const fetchUser = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const res = await api.get("/v1/users/authMe", { withCredentials: true });
-            console.log("authMe response:", res.data); // 👀 check shape here
+            console.log("authMe response:", res.data);
             return res.data;
         } catch (err) {
             console.error("authMe error:", err.response?.data || err.message);

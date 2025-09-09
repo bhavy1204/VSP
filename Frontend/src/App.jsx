@@ -10,10 +10,10 @@ import TweetsGrid from './components/Home/Tweets/TweetsGrid.jsx'
 import CardGrid from './components/Home/Videos/CardGrid.jsx'
 import LayoutWithNavbar from "./components/Home/LayoutWithNavbar.jsx"
 import History from './components/user/History/History.jsx'
-import UserVideo from './components/user/MyVideos/UserVideo.jsx'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchUser } from './features/authSlice.js'
+import MyVideos from './components/user/MyVideos/MyVideos.jsx'
 
 function App() {
 
@@ -30,17 +30,17 @@ function App() {
         <Route path='*' element={<PageNotFound />} />
 
         <Route path='/signup' element={< Signup />} />
-        <Route path='/login' element={<Login/>} />
+        <Route path='/login' element={<Login />} />
 
-        <Route element={<LayoutWithNavbar/>} >
+        <Route element={<LayoutWithNavbar />} >
           <Route path='/home/videos' element={<CardGrid />} />
           <Route path='/home/tweets' element={<TweetsGrid />} />
         </Route>
 
-        <Route element={<Dashboard />} >
+        <Route path='/dashboard' element={<Dashboard />} >
           {/* <Route index element={<UserVideo/>} /> */}
-          <Route path='/dashboard/history' element={<History />} />
-          <Route path='/dashboard/myvideo' element={<UserVideo />} />
+          <Route path='history' element={<History />} />
+          <Route path='myVideos' element={<MyVideos />} />
         </Route>
 
         <Route path='/api/v1/video/get/:videoId' element={<VideoPlaying />} />
