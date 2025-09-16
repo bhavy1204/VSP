@@ -2,8 +2,9 @@ import { useState, useRef, use } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"
+import { setUser } from "../features/authSlice";
 
-export default function Signup({setUser}) {
+export default function Signup() {
 
     const [avatarName, setFilename] = useState("Upload Pfp");
     const [coverImageName, setCoverFilename] = useState("Upload Cover");

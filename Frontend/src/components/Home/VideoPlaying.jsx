@@ -1,18 +1,20 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import VerticalVideoCard from "./Videos/VerticalVideoCard.jsx";
-import { useEffect} from "react";
-import {useParams} from "react-router-dom"
+import { useEffect } from "react";
+import { useParams } from "react-router-dom"
 import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon } from "lucide-react";
 import CommentsContainer from "./CommentsContainer";
 import axios from "axios";
+import api from "../../axios.js";
 
-export default function VideoPlaying({desc, user}) {
-    const {videoId} = useParams();
+export default function VideoPlaying({ desc, user }) {
+    const { videoId } = useParams();
 
     // side side video variables
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [subscribed, setSubscribed] = useState(false);
 
     // video data var
     const [mainVideoData, setMainVideoData] = useState();
@@ -24,11 +26,13 @@ export default function VideoPlaying({desc, user}) {
     const [likes, setLikes] = useState(20);
 
     // For video data
-     useEffect(() => {
+    useEffect(() => {
         const fetchVideoData = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/api/v1/video/get/${videoId}`, { withCredentials: true });
+                console.log("this is calling teh video res :---", res);
                 setMainVideoData(res.data.data);
+                { console.log("Main video data :--- ", mainVideoData) }
             } catch (error) {
                 console.log(error);
                 alert("Error while showing video data")
@@ -40,7 +44,7 @@ export default function VideoPlaying({desc, user}) {
     }, []);
 
     // For comments
-     useEffect(() => {
+    useEffect(() => {
         const fetchComments = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/api/v1/comment/v/${videoId}`, { withCredentials: true });
@@ -54,10 +58,10 @@ export default function VideoPlaying({desc, user}) {
             }
         }
         fetchComments()
-    }, [comment]);
+    }, [videoId]);
 
     // For side bar videos
-     useEffect(() => {
+    useEffect(() => {
         const fetchVideos = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/api/v1/video/get/all`, { withCredentials: true });
@@ -73,6 +77,38 @@ export default function VideoPlaying({desc, user}) {
         fetchVideos()
     }, [comment]);
 
+    // For subscribe toggle
+    const handleSubscribe = async () => {
+        try {
+            const res = await api.post(`/v1/subscription/toggleSubscribe/${mainVideoData?.owner?._id}`)
+            if (res.data.message === "subscribed") {
+                setSubscribed(true);
+            } else {
+                setSubscribed(false);
+            }
+            console.log("This is subscribe toogle res --- ", res);
+        } catch (error) {
+            console.log(error);
+            alert("Some error", error);
+        }
+    }
+
+    // For cchecking isSubscribed when the page load
+    useEffect(() => {
+        const checkStatus = async () => {
+            if (!mainVideoData?.owner?._id) 
+                return;
+            try {
+                const res = await api.get(`/v1/subscription/status/${mainVideoData?.owner?._id}`);
+                console.log("THIS IS RES FROM EFFECT >> ", res)
+                setSubscribed(res.data.data.isSubscribed)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        checkStatus();
+    }, [mainVideoData?.owner?._id])
+
     return (
         <>
             <Navbar />
@@ -86,15 +122,15 @@ export default function VideoPlaying({desc, user}) {
                     <div className="interact flex justify-between px-4 items-center text-gray-300 overflow-x-auto no-scrollbar ">
                         <div className="channel flex gap-6 items-center">
                             <div className=" flex items-center  py-1.5 text-lg gap-2">
-                                <img src="/404.webp" alt="" className="h-10 w-10 border rounded-full" />
-                                <p>Channel</p>
+                                <img src={mainVideoData?.owner?.avatar} alt="" className="h-10 w-10 border rounded-full" />
+                                <p>{mainVideoData?.owner?.username}</p>
                             </div>
                             <div className="toggle ">
-                                <button className="bg-gray-600 py-2 px-4 rounded-2xl ">Subscribe</button>
+                                <button className="bg-gray-600 py-2 px-4 rounded-2xl " onClick={handleSubscribe}>{subscribed ? "subscribed" : "subscribe"}</button>
                             </div>
                             <div className="like flex bg-gray-600 py-2 px-4 rounded-2xl gap-4">
                                 <div className="flex items-center gap-1 border-r-1 pr-2">
-                                    <ThumbsUp className=""/>
+                                    <ThumbsUp className="" />
                                     <p>{likes}</p>
                                 </div>
                                 <div className="flex flex-col">
@@ -118,7 +154,7 @@ export default function VideoPlaying({desc, user}) {
                         </div>
                     </div>
                     <div className="description bg-gray-900 text-gray-500 px-4">
-                        <p>{mainVideoData?.description }</p>
+                        <p>{mainVideoData?.description}</p>
                     </div>
                     <div className="comments my-4 p-2 rounded-2xl">
                         <div className="text-white font-semibold text-2xl border-b py-2">Comments...</div>

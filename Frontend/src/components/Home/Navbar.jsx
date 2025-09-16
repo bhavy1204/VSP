@@ -7,9 +7,12 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUser} from '../../features/authSlice';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Navbar({ toggleSidebar }) {
+
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const { user, status } = useSelector((state) => state.auth);
@@ -27,7 +30,7 @@ export default function Navbar({ toggleSidebar }) {
                             <MenuIcon fontSize='large' />
                         </button>
                     </div>
-                    <div className="logo flex text-gray-300 items-center gap-4">
+                    <div className="logo flex text-gray-300 items-center gap-4" onClick={()=>navigate("/home/videos")}>
                         <YouTubeIcon fontSize='large' /> <p> MultiVerse</p>
                     </div>
                 </div>
