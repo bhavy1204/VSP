@@ -31,11 +31,18 @@ export default function UserDashboardSideBar() {
         window.location.href = "/home/videos";
     }
 
+    // Upload videos
+    const handleUploadVideos = async () => {
+        navigate("/dashboard/upload");
+    }
 
     return (
         <>
             <section className="h-full border-r-1 border-gray-500 w-1/7 text-gray-500 px-3 py-3">
                 <div className="platform flex flex-col gap-5 ">
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleUploadVideos}>
+                        <FilePlay /> upload video
+                    </div>
                     <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleMyVideos}>
                         <FilePlay /> My Videos
                     </div>

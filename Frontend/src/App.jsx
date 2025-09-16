@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchUser } from './features/authSlice.js'
 import MyVideos from './components/user/MyVideos/MyVideos.jsx'
+import UploadVideos from './components/user/upload/UploadVideos.jsx'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
           {/* <Route index element={<UserVideo/>} /> */}
           <Route path='history' element={<History />} />
           <Route path='myVideos' element={<MyVideos />} />
+          <Route path='upload' element={<UploadVideos />} />
         </Route>
 
         <Route path='/api/v1/video/get/:videoId' element={<VideoPlaying />} />
