@@ -3,6 +3,7 @@ import { APIError } from "../utils/APIError.js";
 import { APIResponse } from "../utils/APIResponse.js";
 import { Video } from "../models/video.model.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
+import { Like } from "../models/like.model.js";
 
 const getAllPlatformVideo = asyncHandler(async (req, res) => {
     const page = 1, limit = 12;
@@ -85,8 +86,16 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new APIError(404, "No such video found id")
     }
 
+    // Likes 
+    const like = await Like.countDocuments({video:videoId});
+
+    const isLiked = await Like.findOne({
+        video:videoId,
+        likedBy: req.user?._id
+    })
+
     return res.status(200).json(
-        new APIResponse(200, result, "video fetched success")
+        new APIResponse(200, {result, like,isLiked}, "video fetched success")
     )
 
 })

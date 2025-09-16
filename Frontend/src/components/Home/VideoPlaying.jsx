@@ -23,7 +23,8 @@ export default function VideoPlaying({ desc, user }) {
     const [comment, setComment] = useState([]);
 
     // Likes
-    const [likes, setLikes] = useState(20);
+    const [likes, setLikes] = useState();
+    const [isLiked, setIsLiked] = useState();
 
     // For video data
     useEffect(() => {
@@ -31,7 +32,9 @@ export default function VideoPlaying({ desc, user }) {
             try {
                 const res = await axios.get(`http://localhost:3000/api/v1/video/get/${videoId}`, { withCredentials: true });
                 console.log("this is calling teh video res :---", res);
-                setMainVideoData(res.data.data);
+                setMainVideoData(res.data.data.result);
+                setLikes(res.data.data.like);
+                setIsLiked(res.data.data.isLiked);
                 { console.log("Main video data :--- ", mainVideoData) }
             } catch (error) {
                 console.log(error);
@@ -96,7 +99,7 @@ export default function VideoPlaying({ desc, user }) {
     // For cchecking isSubscribed when the page load
     useEffect(() => {
         const checkStatus = async () => {
-            if (!mainVideoData?.owner?._id) 
+            if (!mainVideoData?.owner?._id)
                 return;
             try {
                 const res = await api.get(`/v1/subscription/status/${mainVideoData?.owner?._id}`);
@@ -108,6 +111,18 @@ export default function VideoPlaying({ desc, user }) {
         }
         checkStatus();
     }, [mainVideoData?.owner?._id])
+
+    // like Toggle 
+    const handleLikeToggle = async () => {
+        try {
+            const res = await api.post(`/v1/like/toggle/v/${mainVideoData?._id}`);
+            console.log("LIKE KA RES ",res);
+            setIsLiked(res.data.data.isLiked);
+            setLikes(res.data.data.likesCount);
+        } catch (error) {
+            console.log("Like Error :: ", error)
+        }
+    }
 
     return (
         <>
@@ -129,13 +144,13 @@ export default function VideoPlaying({ desc, user }) {
                                 <button className="bg-gray-600 py-2 px-4 rounded-2xl " onClick={handleSubscribe}>{subscribed ? "subscribed" : "subscribe"}</button>
                             </div>
                             <div className="like flex bg-gray-600 py-2 px-4 rounded-2xl gap-4">
-                                <div className="flex items-center gap-1 border-r-1 pr-2">
-                                    <ThumbsUp className="" />
+                                <div className="flex items-center gap-1 border-r-1 pr-2" onClick={handleLikeToggle}>
+                                    <ThumbsUp className={`${isLiked? "text-red-600" : "text-white"}`} />
                                     <p>{likes}</p>
                                 </div>
-                                <div className="flex flex-col">
+                                {/* <div className="flex flex-col">
                                     <ThumbsDown />
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <div className=" flex gap-2">

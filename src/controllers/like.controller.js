@@ -20,22 +20,30 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
         throw new APIError(404, "Video Id invalid");
     }
 
-    const isLiked = await Like.findOne({ video: videoId, likedBy: req.user._id });
+    const existingLike = await Like.findOne({ video: videoId, likedBy: req.user._id });
 
-    let result = null;
-
-    if (isLiked) {
-        result = await Like.findOneAndDelete({ video: videoId, likedBy: req.user._id });
-        return res.status(200).json(
-            new APIResponse(200, result, "Video unliked")
-        )
+    if (existingLike) {
+        // If liked, remove like
+        await Like.deleteOne({ _id: existingLike._id });
+    } else {
+        // If not liked, create like
+        await Like.create({ video: videoId, likedBy: req.user._id });
     }
 
-    result = await Like.create({ video: videoId, likedBy: req.user._id })
+    // Get updated total likes
+    const likesCount = await Like.countDocuments({ video: videoId });
 
-    return res.status(200).json(
-        new APIResponse(200, result, "video Liked")
-    )
+    // Check if user currently likes the video
+    const isLiked = await Like.exists({ video: videoId, likedBy: req.user._id });
+
+    return res.status(200).json({
+        data: {
+            likesCount,
+            isLiked: !!isLiked
+        },
+        message: existingLike ? "Video unliked" : "Video liked",
+        status: 200
+    });
 })
 
 const toggleCommentLike = asyncHandler(async (req, res) => {
