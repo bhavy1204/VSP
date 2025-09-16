@@ -5,12 +5,12 @@ import { Video } from "../models/video.model.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 
 const getAllPlatformVideo = asyncHandler(async (req, res) => {
-    const page = 1, limit = 10;
+    const page = 1, limit = 12;
 
-    const result = await Video.find().select("title thumbnail views createdAt").skip((page - 1) * limit).limit(Number(limit));
+    const result = await Video.find().select("title thumbnail views createdAt");
 
     return res.status(200).json(
-        new APIResponse(200, result, "All videos fetched")
+        new APIResponse(200, result, "videos fetched")
     )
 })
 
@@ -36,6 +36,7 @@ const publishVideo = asyncHandler(async (req, res) => {
         throw new APIError(400, "title and description required")
     }
 
+    console.log("This is req files : ",req);
     const videoLocalPath = req.files?.video[0]?.path;
 
     const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
@@ -78,7 +79,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
     const rawId = req.params.videoId.replace(":", "");
 
-    const result = await Video.findByIdAndUpdate(rawId, { $inc: { views: 1 } }, { new: true });
+    const result = await Video.findByIdAndUpdate(rawId, { $inc: { views: 1 } }, { new: true }).populate("owner", "username avatar");
 
     if (!result) {
         throw new APIError(404, "No such video found id")

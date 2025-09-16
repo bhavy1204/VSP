@@ -105,7 +105,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     console.log(loggedInUser);
 
-    const accessTokenExpiry = 15 * 60 * 1000;        // 15 minutes
+    const accessTokenExpiry =7 * 24 * 60 * 60 * 1000;// 15 * 60 * 1000      // 15 minutes
     const refreshTokenExpiry = 7 * 24 * 60 * 60 * 1000; // 7 days
 
     const accessOptions = {

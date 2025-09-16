@@ -5,7 +5,7 @@ import { verifyJwt } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.route("/v1").get(getAllVideos).post( verifyJwt,
+router.route("/v1/upload").get(getAllVideos).post( verifyJwt,
     upload.fields([
         {
             name: "video",
