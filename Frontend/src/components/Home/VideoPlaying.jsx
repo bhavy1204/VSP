@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 import VerticalVideoCard from "./Videos/VerticalVideoCard.jsx";
 import { useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom"
+import { useParams, useLocation, useNavigate } from "react-router-dom"
 import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon, Link, Facebook } from "lucide-react";
 import CommentsContainer from "./CommentsContainer";
 import axios from "axios";
@@ -11,6 +11,7 @@ import api from "../../axios.js";
 export default function VideoPlaying({ desc, user }) {
     const { videoId } = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
 
     // side side video variables
     const [videos, setVideos] = useState([]);
@@ -168,6 +169,16 @@ export default function VideoPlaying({ desc, user }) {
 
         window.open(whatsappUrl, "_blank");
     }
+
+    const handleDownload = () => {
+        const link = document.createElement("a");
+        link.href = mainVideoData?.videoFile; // your video URL
+        link.download = `${mainVideoData?.title || "video"}.mp4`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <>
             <Navbar />
@@ -217,11 +228,11 @@ export default function VideoPlaying({ desc, user }) {
                                     </div>
                                 }
                             </div>
-                            <div className="comments flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl ">
+                            <div className="comments flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl " onClick={() => document.getElementById("comments")?.scrollIntoView({ behavior: "smooth" })}>
                                 <MessageCircle />
                                 Comments
                             </div>
-                            <div className="download flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl ">
+                            <div className="download flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl " onClick={handleDownload}>
                                 <DownloadIcon />
                                 Download
                             </div>
@@ -230,7 +241,7 @@ export default function VideoPlaying({ desc, user }) {
                     <div className="description bg-gray-900 text-gray-500 px-4">
                         <p>{mainVideoData?.description}</p>
                     </div>
-                    <div className="comments my-4 p-2 rounded-2xl">
+                    <div className="comments my-4 p-2 rounded-2xl" id="comments">
                         <div className="text-white font-semibold text-2xl border-b py-2">Comments...</div>
                         <CommentsContainer comments={comment} />
                     </div>
@@ -238,7 +249,7 @@ export default function VideoPlaying({ desc, user }) {
                 <div className="recommndation w-1/4 overflow-y-scroll no-scrollbar flex-col flex">
                     <VerticalVideoCard videos={videos} />
                 </div>
-            </div>
+            </div >
         </>
     )
 }
