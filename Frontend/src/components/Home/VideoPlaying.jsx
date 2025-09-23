@@ -2,14 +2,15 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 import VerticalVideoCard from "./Videos/VerticalVideoCard.jsx";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom"
-import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon } from "lucide-react";
+import { useParams, useLocation } from "react-router-dom"
+import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon, Link, Facebook } from "lucide-react";
 import CommentsContainer from "./CommentsContainer";
 import axios from "axios";
 import api from "../../axios.js";
 
 export default function VideoPlaying({ desc, user }) {
     const { videoId } = useParams();
+    const location = useLocation();
 
     // side side video variables
     const [videos, setVideos] = useState([]);
@@ -29,6 +30,12 @@ export default function VideoPlaying({ desc, user }) {
     //  dislikes
     const [dislikes, setDislikes] = useState();
     const [isDisliked, setIsDisliked] = useState();
+
+    //  share
+    const [shareOpen, setShareOpen] = useState(false);
+
+    // llink
+    const [copied, setCopied] = useState("");
 
     // For video data
     useEffect(() => {
@@ -140,6 +147,27 @@ export default function VideoPlaying({ desc, user }) {
         }
     }
 
+    // for shre
+    const handleShare = async () => {
+        setShareOpen(!shareOpen);
+    }
+
+
+    const handleCopyLink = async () => {
+        let url = window.location.origin + location.pathname
+        navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        alert("Copied URL: " + url);
+    }
+
+    const handleWhatsappShare = async () => {
+        const url = window.location.href; // current page
+        const text = encodeURIComponent(`Check this out: ${url}`);
+        const whatsappUrl = `https://wa.me/?text=${text}`;
+
+        window.open(whatsappUrl, "_blank");
+    }
     return (
         <>
             <Navbar />
@@ -150,7 +178,7 @@ export default function VideoPlaying({ desc, user }) {
                         className="w-full mb-4"
                     >
                     </video>
-                    <div className="interact flex justify-between px-4 items-center text-gray-300 overflow-x-auto no-scrollbar ">
+                    <div className="interact flex justify-between px-4 items-center text-gray-300 no-scrollbar ">
                         <div className="channel flex gap-6 items-center">
                             <div className=" flex items-center  py-1.5 text-lg gap-2">
                                 <img src={mainVideoData?.owner?.avatar} alt="" className="h-10 w-10 border rounded-full" />
@@ -172,9 +200,22 @@ export default function VideoPlaying({ desc, user }) {
 
                         </div>
                         <div className=" flex gap-2">
-                            <div className="share flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl ">
-                                <Share2 />
-                                Share
+                            <div className="relative">
+                                <div className=" share flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl " onClick={handleShare}>
+                                    <Share2 />
+                                    Share
+                                </div>
+                                {shareOpen &&
+                                    <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded-xl shadow-lg p-3 z-50 flex flex-col gap-2">
+                                        <button className="bg-gray-200 hover:bg-gray-300 rounded-lg px-3 py-1 text-sm text-left  flex gap-1"
+                                            onClick={handleCopyLink}>
+                                            <Link className="text-sm font-thin py-1" /> Copy Link
+                                        </button>
+                                        <button className="bg-gray-200 hover:bg-gray-300 rounded-lg px-3 py-1 text-sm text-left  flex gap-1" onClick={handleWhatsappShare}>
+                                            <MessageCircle className="text-sm font-thin py-1" />Share on WhatsApp
+                                        </button>
+                                    </div>
+                                }
                             </div>
                             <div className="comments flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl ">
                                 <MessageCircle />
