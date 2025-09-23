@@ -5,14 +5,14 @@ import { app } from "./app.js";
 dotenv.config({ path: "./.env" })
 
 connectDB()
-.then(()=>{
-    app.on("error",(err)=>{
-        console.log("Express error "+err);
+    .then(() => {
+        app.on("error", (err) => {
+            console.log("Express error " + err);
+        })
+        app.listen(process.env.PORT || 3000, () => {
+            console.log("server up and running at port " + process.env.PORT);
+        })
     })
-    app.listen(process.env.PORT || 3000,()=>{
-        console.log("server up and running at port "+process.env.PORT);
-    })
-})
-.catch((err)=>{
-    console.log(err);
-});
+    .catch((err) => {
+        console.log(err);
+    });

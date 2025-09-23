@@ -26,6 +26,10 @@ export default function VideoPlaying({ desc, user }) {
     const [likes, setLikes] = useState();
     const [isLiked, setIsLiked] = useState();
 
+    //  dislikes
+    const [dislikes, setDislikes] = useState();
+    const [isDisliked, setIsDisliked] = useState();
+
     // For video data
     useEffect(() => {
         const fetchVideoData = async () => {
@@ -116,11 +120,23 @@ export default function VideoPlaying({ desc, user }) {
     const handleLikeToggle = async () => {
         try {
             const res = await api.post(`/v1/like/toggle/v/${mainVideoData?._id}`);
-            console.log("LIKE KA RES ",res);
+            console.log("LIKE KA RES ", res);
             setIsLiked(res.data.data.isLiked);
             setLikes(res.data.data.likesCount);
         } catch (error) {
             console.log("Like Error :: ", error)
+        }
+    }
+
+    // dislike toggle 
+    const handleDislikeToggle = async () => {
+        try {
+            const res = await api.post(`/v1/dislike/toggle/v/${mainVideoData?._id}`);
+            console.log("DISLIKE KA RES >> ", res)
+            setIsDisliked(res.data.data.isDisliked)
+            setDislikes(res.data.data.dislikesCount)
+        } catch (error) {
+            console.log("Dislike error ", error)
         }
     }
 
@@ -145,13 +161,15 @@ export default function VideoPlaying({ desc, user }) {
                             </div>
                             <div className="like flex bg-gray-600 py-2 px-4 rounded-2xl gap-4">
                                 <div className="flex items-center gap-1 border-r-1 pr-2" onClick={handleLikeToggle}>
-                                    <ThumbsUp className={`${isLiked? "text-red-600" : "text-white"}`} />
+                                    <ThumbsUp className={`${isLiked ? "text-red-600" : "text-white"}`} />
                                     <p>{likes}</p>
                                 </div>
-                                {/* <div className="flex flex-col">
-                                    <ThumbsDown />
-                                </div> */}
+                                <div className="flex items-center gap-1" onClick={handleDislikeToggle}>
+                                    <ThumbsDown className={`${isDisliked ? "text-red-600" : "text-white"}`} />
+                                    <p>{dislikes}</p>
+                                </div>
                             </div>
+
                         </div>
                         <div className=" flex gap-2">
                             <div className="share flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl ">

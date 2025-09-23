@@ -15,6 +15,7 @@ import { useEffect } from 'react'
 import { fetchUser } from './features/authSlice.js'
 import MyVideos from './components/user/MyVideos/MyVideos.jsx'
 import UploadVideos from './components/user/upload/UploadVideos.jsx'
+import { UserChannel } from './components/user/UserChannel.jsx'
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
 
         <Route path='/dashboard' element={<Dashboard />} >
           {/* <Route index element={<UserVideo/>} /> */}
+          <Route path='user' element={<UserChannel />} />
           <Route path='history' element={<History />} />
           <Route path='myVideos' element={<MyVideos />} />
           <Route path='upload' element={<UploadVideos />} />

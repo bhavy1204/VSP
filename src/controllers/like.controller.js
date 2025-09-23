@@ -6,9 +6,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { Video } from "../models/video.model.js";
 import { Comment } from "../models/comment.model.js"
 import { Tweet } from "../models/tweet.model.js";
+import { User } from "../models/user.model.js"
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
-    const { videoId, } = req.params;
+    const { videoId } = req.params;
 
     if (!videoId) {
         throw new APIError(400, "Video Id required");
@@ -110,6 +111,23 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 })
 
 const getLikedVideos = asyncHandler(async (req, res) => {
+    const userId = req.user?._id;
+
+    if (!userId) {
+        new APIError(404, "user ID required")
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        new APIError(404, "No such user found");
+    }
+
+    const likedVideos = await Like.find({ likedBy: userId });
+
+    return res.status(200).json(
+        new APIResponse(200, likedVideos, "like videos fetched")
+    )
 
 })
 

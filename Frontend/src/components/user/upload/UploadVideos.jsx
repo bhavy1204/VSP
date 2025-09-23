@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
+import { useRef, useState} from "react";
 import api from "../../../axios";
 import { setUser } from "../../../features/authSlice";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function UploadVideos() {
 

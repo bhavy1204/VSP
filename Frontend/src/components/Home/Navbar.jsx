@@ -50,7 +50,7 @@ export default function Navbar({ toggleSidebar }) {
                         </a>
                     </div>
                     <div className="profike">
-                        <a href={`${user ? '/dashboard' : '/signup'}`}>
+                        <a href={`${user ? '/dashboard/user' : '/signup'}`}>
                             {user ?
                                 <img src={user.avatar} alt="" className='h-10 rounded-full w-10' />
                                 :

@@ -12,7 +12,7 @@ export default function Dashboard({ user }) {
                     <Navbar user={user} />
                     <div className="flex flex-1 overflow-hidden no-scrollbar">
                         <UserDashboardSideBar />
-                        <div className="flex-1 p-4 overflow-y-auto no-scrollbar">
+                        <div className="flex-1 overflow-y-auto no-scrollbar">
                             <Outlet />
                         </div>
                     </div>

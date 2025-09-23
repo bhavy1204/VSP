@@ -1,4 +1,9 @@
+import { useNavigate } from "react-router-dom"
+
 export default function PageNotFound() {
+
+    const navigate = useNavigate();
+
     return (
         <>
             <div className="conatiner flex justify-center items-center m-5 flex-col">
@@ -10,6 +15,9 @@ export default function PageNotFound() {
                 </div>
                 <div className="text text-gray-300">
                     Uh oh we can't seem to find page you are looking for. Trying going back or conatct our <a href="/help">HELP</a> center for more info.
+                </div>
+                <div>
+                    <button className=" text-gray-300 px-2 py-1 bg-gray-950 m-5 rounded-md" onClick={()=>navigate("/home/videos")}>Go to home</button>
                 </div>
             </div>
         </>

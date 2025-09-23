@@ -28,6 +28,7 @@ import subscription from "./routes/subscription.route.js"
 import tweet from "./routes/tweet.route.js"
 import video from "./routes/video.route.js"
 import googleLogin from "./routes/GoogleLogin.route.js"
+import dislike from "./routes/dislike.route.js";
 
 // Routes declaration
 app.use("/api/v1/auth",googleLogin);
@@ -36,9 +37,11 @@ app.use("/api/v1/healthcheck", healthCheckRouter);
 app.use("/api/v1/comment", comment);
 app.use("/api/v1/dashboard", dashboard);
 app.use("/api/v1/like", like);
+app.use("/api/v1/dislike", dislike);
 app.use("/api/v1/playlist", playlist);
 app.use("/api/v1/subscription", subscription);
 app.use("/api/v1/tweet", tweet);
 app.use("/api/v1/video",video);
+
 
 export { app }
