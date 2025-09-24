@@ -37,7 +37,7 @@ export default function HomePage({ user }) {
         fetchVideos()
     }, []);
 
-    // Fetching all videos
+    // Fetching all tweets
     useEffect(() => {
         const fetchTweets = async () => {
             try {

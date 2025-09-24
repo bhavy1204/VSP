@@ -16,6 +16,7 @@ import { fetchUser } from './features/authSlice.js'
 import MyVideos from './components/user/MyVideos/MyVideos.jsx'
 import UploadVideos from './components/user/upload/UploadVideos.jsx'
 import { UserChannel } from './components/user/UserChannel.jsx'
+import MyPosts from './components/user/posts/MyPosts.jsx'
 
 function App() {
 
@@ -45,9 +46,10 @@ function App() {
           <Route path='history' element={<History />} />
           <Route path='myVideos' element={<MyVideos />} />
           <Route path='upload' element={<UploadVideos />} />
+          <Route path='myPosts' element={<MyPosts />} />
         </Route>
 
-        <Route path='/api/v1/video/get/:videoId' element={<VideoPlaying />} />
+        <Route path='video/:videoId' element={<VideoPlaying />} />
 
       </Routes>
     </>

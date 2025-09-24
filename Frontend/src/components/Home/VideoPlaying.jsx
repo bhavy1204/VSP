@@ -7,11 +7,17 @@ import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon, Link, Facebo
 import CommentsContainer from "./CommentsContainer";
 import axios from "axios";
 import api from "../../axios.js";
+import { useSelector } from "react-redux";
 
-export default function VideoPlaying({ desc, user }) {
+export default function VideoPlaying() {
     const { videoId } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
+
+    const user = useSelector((state) => state.auth.user);
+
+    // Comment 
+    const [form, setForm] = useState({ ownerId: "", content: "", videoId: "" });
 
     // side side video variables
     const [videos, setVideos] = useState([]);
@@ -37,6 +43,9 @@ export default function VideoPlaying({ desc, user }) {
 
     // llink
     const [copied, setCopied] = useState("");
+
+    // comment
+    const [addCommentForm, setAddCommentForm] = useState(false);
 
     // For video data
     useEffect(() => {
@@ -66,7 +75,7 @@ export default function VideoPlaying({ desc, user }) {
                 console.log(res);
                 setComment(res.data.data);
             } catch (error) {
-                console.log(error);
+                console.log("Error while comments show :- ", error);
                 alert("Error while displaying comments")
             } finally {
                 setLoading(false);
@@ -153,7 +162,7 @@ export default function VideoPlaying({ desc, user }) {
         setShareOpen(!shareOpen);
     }
 
-
+    // Copy to clipboard
     const handleCopyLink = async () => {
         let url = window.location.origin + location.pathname
         navigator.clipboard.writeText(url);
@@ -162,6 +171,7 @@ export default function VideoPlaying({ desc, user }) {
         alert("Copied URL: " + url);
     }
 
+    // WhatsApp share
     const handleWhatsappShare = async () => {
         const url = window.location.href; // current page
         const text = encodeURIComponent(`Check this out: ${url}`);
@@ -170,7 +180,8 @@ export default function VideoPlaying({ desc, user }) {
         window.open(whatsappUrl, "_blank");
     }
 
-    const handleDownload = () => {
+    // for download
+    const handleDownload = async () => {
         const link = document.createElement("a");
         link.href = mainVideoData?.videoFile; // your video URL
         link.download = `${mainVideoData?.title || "video"}.mp4`;
@@ -178,6 +189,37 @@ export default function VideoPlaying({ desc, user }) {
         link.click();
         document.body.removeChild(link);
     };
+
+    // for add comments
+    const handleAddComment = async () => {
+        setAddCommentForm(!addCommentForm);
+    }
+
+    // for submit comment
+    const handleSubmitComment = async (e) => {
+        e.preventDefault();
+
+        console.log("Comment form data", user?.data?._id,form.content,mainVideoData?._id )
+
+        try {
+            const res = await api.post("/v1/comment/v", {
+                ownerId: user?.data?._id,
+                content: form.content,
+                videoId: mainVideoData?._id,
+            });
+
+            setAddCommentForm(false);
+            setForm({ ownerId: "", content: "", videoId: "" });
+            setComment(prev => [...prev, res.data.data]);
+        } catch (error) {
+            console.log(error);
+            alert("Some error while adding comment");
+        }
+    }
+
+    const handleCommentChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value })
+    }
 
     return (
         <>
@@ -242,7 +284,38 @@ export default function VideoPlaying({ desc, user }) {
                         <p>{mainVideoData?.description}</p>
                     </div>
                     <div className="comments my-4 p-2 rounded-2xl" id="comments">
-                        <div className="text-white font-semibold text-2xl border-b py-2">Comments...</div>
+                        <div className=" flex items-center  border-b text-white justify-between">
+                            <div className="text-white font-semibold text-2xl py-2">Comments...</div>
+                            {user && <div className="bg-green-600 text-white font-semibold px-3 py-1 rounded-md " onClick={handleAddComment}>
+                                Add comment
+                            </div>}
+                        </div>
+                        {console.log("This is s a user", user)}
+                        {addCommentForm &&
+                            <div className="p-5 flex flex-col gap-2 bg-gray-950 my-5 rounded-2xl">
+                                <form action="" onSubmit={handleSubmitComment}>
+
+                                    <div className="user text-indigo-600">
+                                        <input type="text" value={user.data.fullName} readOnly name="username" />
+                                    </div>
+                                    <div className="comment text-gray-600">
+                                        <input
+                                            type="text"
+                                            className=" text-gray-300 w-full border-b py-2 focus:outline-none"
+                                            placeholder="Add comment"
+                                            name="content"
+                                            onChange={handleCommentChange}
+                                        />
+                                    </div>
+                                    <button
+                                        className="Add font-thin gap-6 size-1/8 text-center items-center h-fit bg-green-600 text-white rounded-md my-2"
+                                        type="submit"
+                                    >
+                                        Add
+                                    </button>
+                                </form>
+                            </div>
+                        }
                         <CommentsContainer comments={comment} />
                     </div>
                 </div>
