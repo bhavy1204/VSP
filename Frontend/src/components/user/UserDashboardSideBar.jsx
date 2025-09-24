@@ -36,6 +36,12 @@ export default function UserDashboardSideBar() {
         navigate("/dashboard/upload");
     }
 
+    // my posts
+    const handleMyPosts = async () => {
+        navigate("/dashboard/myPosts");
+    }
+
+
     return (
         <>
             <section className="h-full border-r-1 border-gray-500 w-1/7 text-gray-500 px-3 py-3">
@@ -46,7 +52,7 @@ export default function UserDashboardSideBar() {
                     <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleMyVideos}>
                         <FilePlay /> My Videos
                     </div>
-                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleMyPosts}>
                         <StickyNote /> My posts
                     </div>
                     <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>

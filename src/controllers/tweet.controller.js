@@ -27,7 +27,7 @@ const createTweet = asyncHandler(async (req, res) => {
 })
 
 const getUserTweet = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
+    const {userId }= req.params;
 
     if (!userId) {
         throw new APIError(400, "userId required")

@@ -5,7 +5,7 @@ const router = Router();
 
 router.route("/all").get(getAllTweet);
 
-router.route("/u/:getTweet").get(getUserTweet);
+router.route("/u/:userId").get(getUserTweet);
 
 router.route("/create").post(createTweet);
 
