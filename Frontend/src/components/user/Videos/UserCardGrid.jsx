@@ -7,8 +7,8 @@ export default function UserCardGrid({type}) {
     const { videos } = useVideos();
     const videoList = videos[type] || [];
     return (
-        <>
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="h-full">
+            <div className="flex flex-col h-full">
                 {videoList.length > 0 ? (
                     videoList.map((v) => (
                         <UserVideoCard
@@ -30,6 +30,6 @@ export default function UserCardGrid({type}) {
                     />
                 )}
             </div>
-        </>
+        </div>
     )
 }
