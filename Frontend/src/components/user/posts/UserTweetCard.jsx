@@ -5,9 +5,22 @@ export default function UserTweetCard({
     content,
     creator,
     createdAt,
-    onDelete,
-    onEdit,
+    id
 }) {
+
+    const onEdit = async () => {
+
+    }
+
+    const onDelete = async () => {
+        try {
+            const res = api.post(`v1/comment/c/${id}`);
+            console.log("comment delete res >> ",res)
+        } catch (error) {
+
+        }
+    }
+
     return (
         <div className="w-full flex items-start justify-between bg-gray-900 rounded-xl p-4 mb-4 shadow-lg hover:bg-gray-800 transition">
             {/* Left + Middle: Tweet content */}
@@ -23,13 +36,13 @@ export default function UserTweetCard({
             {/* Right: Actions */}
             <div className="flex flex-col gap-2 items-end">
                 <button
-                    onClick={() => onEdit(tweetId)}
+                    onClick={onEdit}
                     className="px-3 py-1 rounded-md text-sm font-medium bg-blue-600 hover:bg-blue-500"
                 >
                     Edit
                 </button>
                 <button
-                    onClick={() => onDelete(tweetId)}
+                    onClick={onDelete}
                     className="px-3 py-1 rounded-md text-sm font-medium bg-red-600 hover:bg-red-500"
                 >
                     Delete

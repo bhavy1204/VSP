@@ -42,9 +42,12 @@ const addComment = asyncHandler(async (req, res) => {
 })
 
 const updateComment = asyncHandler(async (req, res) => {
-    const { newContent, commentId } = req.body;
+    const { commentId } = req.params;
+    const { newContent } = req.body;
 
     if (!newContent || !commentId) {
+        console.log(commentId)
+        console.log(newContent)
         throw new APIError(400, "content and commentId required")
     }
 
@@ -68,7 +71,7 @@ const updateComment = asyncHandler(async (req, res) => {
 })
 
 const deleteComment = asyncHandler(async (req, res) => {
-    const { commentId } = req.body;
+    const { commentId } = req.params;
     if (!commentId) {
         throw new APIError(400, "comment ID required");
     }
@@ -86,17 +89,17 @@ const deleteComment = asyncHandler(async (req, res) => {
     )
 })
 
-const findTotalComments = asyncHandler(async(req,res)=>{
-    const {videoId} = req.body;
+const findTotalComments = asyncHandler(async (req, res) => {
+    const { videoId } = req.body;
 
-    if(!videoId){
+    if (!videoId) {
         throw new APIError(400, "VideoId required");
     }
 
-    const totalComments = await Comment.countDocuments({video: videoId});
+    const totalComments = await Comment.countDocuments({ video: videoId });
 
     return res.status(200).json(
-        new APIResponse(200, totalComments, "comments number fetched" )
+        new APIResponse(200, totalComments, "comments number fetched")
     )
 
 })

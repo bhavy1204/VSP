@@ -11,6 +11,7 @@ export default function CommentsContainer({ comments=[] }) {
                             key={c._id}
                             owner={c.owner}
                             content={c.content}
+                            id = {c._id}
                         />
                     ))
                 ) : (

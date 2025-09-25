@@ -72,7 +72,7 @@ export default function VideoPlaying() {
         const fetchComments = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/api/v1/comment/v/${videoId}`, { withCredentials: true });
-                console.log(res);
+                console.log("Comment fetch res : ",res);
                 setComment(res.data.data);
             } catch (error) {
                 console.log("Error while comments show :- ", error);
