@@ -8,6 +8,8 @@ import CommentsContainer from "./CommentsContainer";
 import axios from "axios";
 import api from "../../axios.js";
 import { useSelector } from "react-redux";
+import Toast, { Toaster } from "react-hot-toast"
+
 
 export default function VideoPlaying() {
     const { videoId } = useParams();
@@ -72,7 +74,7 @@ export default function VideoPlaying() {
         const fetchComments = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/api/v1/comment/v/${videoId}`, { withCredentials: true });
-                console.log("Comment fetch res : ",res);
+                console.log("Comment fetch res : ", res);
                 setComment(res.data.data);
             } catch (error) {
                 console.log("Error while comments show :- ", error);
@@ -168,7 +170,7 @@ export default function VideoPlaying() {
         navigator.clipboard.writeText(url);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
-        alert("Copied URL: " + url);
+        Toast.success("Link Copied !")
     }
 
     // WhatsApp share
@@ -188,6 +190,7 @@ export default function VideoPlaying() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        Toast.success("Download started")
     };
 
     // for add comments
@@ -199,7 +202,7 @@ export default function VideoPlaying() {
     const handleSubmitComment = async (e) => {
         e.preventDefault();
 
-        console.log("Comment form data", user?.data?._id,form.content,mainVideoData?._id )
+        console.log("Comment form data", user?.data?._id, form.content, mainVideoData?._id)
 
         try {
             const res = await api.post("/v1/comment/v", {
@@ -211,9 +214,10 @@ export default function VideoPlaying() {
             setAddCommentForm(false);
             setForm({ ownerId: "", content: "", videoId: "" });
             setComment(prev => [...prev, res.data.data]);
+            Toast.success("Comment Added")
         } catch (error) {
             console.log(error);
-            alert("Some error while adding comment");
+            Toast.error("Some error occured")
         }
     }
 
@@ -323,6 +327,7 @@ export default function VideoPlaying() {
                     <VerticalVideoCard videos={videos} />
                 </div>
             </div >
+            <Toaster position="top-center" reverseOrder={false} />
         </>
     )
 }
