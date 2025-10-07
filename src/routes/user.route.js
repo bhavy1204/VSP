@@ -44,6 +44,6 @@ router.route("/authMe").get(verifyJwt, authMe);
 
 router.route("/addToWatchHistory/:videoId").post(verifyJwt, addToWatchHistory)
 
-router.route("/removeFromWatchHistory/:videoId").post(verifyJwt, removeFromWatchHistory)
+router.route("/removeFromWatchHistory/:videoId").delete(verifyJwt, removeFromWatchHistory)
 
 export default router;

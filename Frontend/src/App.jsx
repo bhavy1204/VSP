@@ -29,7 +29,7 @@ function App() {
 
   return (
     <>
-      <Toaster position="top-center" />
+      <Toaster position="top-center" reverseOrder={false} />
       <Routes>
 
         <Route path='*' element={<PageNotFound />} />

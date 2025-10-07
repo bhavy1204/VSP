@@ -327,7 +327,6 @@ export default function VideoPlaying() {
                     <VerticalVideoCard videos={videos} />
                 </div>
             </div >
-            <Toaster position="top-center" reverseOrder={false} />
         </>
     )
 }

@@ -485,8 +485,8 @@ const removeFromWatchHistory = asyncHandler(async (req, res) => {
 
     if (!user) throw new APIError(404, "User not found");
 
-    new APIResponse(200, "video removed successfully");
-
+    return res.status(200).
+        json(new APIResponse(200, "video removed successfully"))
 })
 
 export {

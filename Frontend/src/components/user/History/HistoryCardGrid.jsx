@@ -6,7 +6,6 @@ const HistoryCardGrid = ({videoList, onRemove}) => {
 
     return (
         <div className="h-full">
-            {console.log(videoList)}
             <div className="flex flex-col h-full">
                 {videoList.length > 0 ? (
                     videoList.map((v) => (
