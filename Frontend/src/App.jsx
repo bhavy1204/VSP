@@ -17,6 +17,7 @@ import MyVideos from './components/user/MyVideos/MyVideos.jsx'
 import UploadVideos from './components/user/upload/UploadVideos.jsx'
 import { UserChannel } from './components/user/UserChannel.jsx'
 import MyPosts from './components/user/posts/MyPosts.jsx'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-center" />
       <Routes>
 
         <Route path='*' element={<PageNotFound />} />

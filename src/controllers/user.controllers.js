@@ -105,7 +105,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     console.log(loggedInUser);
 
-    const accessTokenExpiry =7 * 24 * 60 * 60 * 1000;// 15 * 60 * 1000      // 15 minutes
+    const accessTokenExpiry = 7 * 24 * 60 * 60 * 1000;// 15 * 60 * 1000      // 15 minutes
     const refreshTokenExpiry = 7 * 24 * 60 * 60 * 1000; // 7 days
 
     const accessOptions = {
@@ -418,7 +418,7 @@ const getWAtchHistory = asyncHandler(async (req, res) => {
                         $addFields: {
                             owner: {
                                 // giving first field of array which is returned. nothing much
-                                $first: "$owner"
+                                $first: "$owners"
                             }
                         }
                     }
@@ -434,6 +434,61 @@ const getWAtchHistory = asyncHandler(async (req, res) => {
 
 })
 
+const addToWatchHistory = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+    const userId = req.user?._id;
+
+    if (!videoId) {
+        throw new APIError(404, "video ID required")
+    }
+
+    // Validate videoId
+    if (!mongoose.Types.ObjectId.isValid(videoId)) {
+        return res.status(400).json({ message: "Invalid video ID" });
+    }
+
+    // Add to watchHistory only if not already there
+    const user = await User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { watchHistory: videoId } },
+        { new: true }
+    ).populate("watchHistory");
+
+    res.status(200).json({
+        success: true,
+        message: "Added to watch history",
+        data: user.watchHistory,
+    });
+})
+
+const removeFromWatchHistory = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    const userId = req.user?._id
+
+    if (!videoId) {
+        throw new APIError(404, "Video ID required")
+    }
+
+    if (!userId) {
+        throw new APIError(404, "User ID required")
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(videoId)) {
+        throw new APIError(400, "Invalid video ID");
+    }
+
+    const user = await User.findByIdAndUpdate(
+        userId,
+        { $pull: { watchHistory: videoId } }, // removes matching ObjectId
+        { new: true } // return the updated document
+    ).populate("watchHistory");
+
+    if (!user) throw new APIError(404, "User not found");
+
+    new APIResponse(200, "video removed successfully");
+
+})
+
 export {
     authMe,
     registerUser,
@@ -446,5 +501,7 @@ export {
     updateUserPfp,
     updateUserDetails,
     getUserChannelProfile,
-    getWAtchHistory
+    getWAtchHistory,
+    addToWatchHistory,
+    removeFromWatchHistory
 }

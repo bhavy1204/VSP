@@ -1,10 +1,22 @@
 import { Link } from "react-router-dom"
+import api from "../../../axios";
 
-export default function VideoCard({title, views, thumbnail,upload,videoId}) {
+export default function VideoCard({ title, views, thumbnail, upload, videoId }) {
+
+    const handleVideoClick = async () => {
+        try {
+            const res = await api.post(`/v1/users/addToWatchHistory/${videoId}`)
+            console.log(res);
+        } catch (err) { 
+            console.log("WATCH HISTORY ADD ERROR : ", err);
+        }
+    }
+
+
     return (
         <>
             <Link to={`/video/${videoId}`} >
-                <div className="card-container m-4 bg-gray-900 rounded-2xl">
+                <div className="card-container m-4 bg-gray-900 rounded-2xl" onClick={handleVideoClick}>
                     <div className="thumbnail flex justify-center px-0.5 pt-0.5">
                         <img src={thumbnail} alt="" className="rounded-t-md" />
                     </div>

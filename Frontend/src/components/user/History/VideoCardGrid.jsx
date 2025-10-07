@@ -2,8 +2,9 @@ import VideoCard from "./VideoCard.jsx";
 import { formatDistanceToNow } from "date-fns";
 import { useOutletContext } from "react-router-dom";
 import { useVideos } from "../VideoProvider.jsx";
+import HistoryCard from "./HistoryCard.jsx";
 
-export default function VideoCardGrid({type}) {
+export default function VideoCardGrid({ type }) {
     const { videos } = useVideos();
     const videoList = videos[type] || [];
     return (
@@ -11,7 +12,7 @@ export default function VideoCardGrid({type}) {
             <div className="flex flex-col h-full">
                 {videoList.length > 0 ? (
                     videoList.map((v) => (
-                        <UserVideoCard
+                        <HistoryCard
                             key={v._id}
                             videoId={v._id}
                             title={v.title}
@@ -19,8 +20,8 @@ export default function VideoCardGrid({type}) {
                             views={v.views}
                             upload={formatDistanceToNow(new Date(v.createdAt), { addSuffix: true })}
                         />
-                    )) ): (
-                    <UserVideoCard
+                    ))) : (
+                    <HistoryCard
                         key={1}
                         videoId={1}
                         title={"sample video title"}
