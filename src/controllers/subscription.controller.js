@@ -44,8 +44,9 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 })
 
 const getUserChannelSubscriber = asyncHandler(async (req, res) => {
-    const { channelId } = req.params;
-    const userId = req.user._id;
+    const { channelId } = req.user._id;
+    // const { channelId } = req.params;
+    // const userId = req.user._id;
 
     if (!channelId) {
         throw new APIError(400, "channel id required");
@@ -108,66 +109,74 @@ const getUserChannelSubscriber = asyncHandler(async (req, res) => {
 })
 
 const getSubscribedChannel = asyncHandler(async (req, res) => {
-    const { subscriberId } = req.params;
+  const { subscriberId } = req.params;
 
-    if (!subscriberId) {
-        throw new APIError(400, "subscriber ID required")
+  if (!subscriberId) throw new APIError(400, "subscriber ID required");
+
+  const subscriber = await User.findById(subscriberId);
+  if (!subscriber) throw new APIError(404, "user not found");
+
+  const result = await Subscription.aggregate([
+    {
+      $match: {
+        subscriber: new mongoose.Types.ObjectId(subscriberId)
+      }
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "channel",
+        foreignField: "_id",
+        as: "channel"
+      }
+    },
+    { $unwind: "$channel" },
+    // 🔥 Add this lookup to count each channel's subscribers
+    {
+      $lookup: {
+        from: "subscriptions", // same collection
+        localField: "channel._id",
+        foreignField: "channel",
+        as: "subscribers"
+      }
+    },
+    {
+      $addFields: {
+        "channel.subscriberCount": { $size: "$subscribers" }
+      }
+    },
+    {
+      $group: {
+        _id: "$subscriber",
+        channels: { $push: "$channel" },
+        channelCount: { $sum: 1 }
+      }
+    },
+    {
+      $project: {
+        "channels.password": 0,
+        "channels.refreshToken": 0,
+        subscribers: 0
+      }
     }
+  ]);
 
-    const subscriber = await User.findById(subscriberId);
-
-    if (!subscriber) {
-        throw new APIError(404, "user not found");
-    }
-
-    const result = await Subscription.aggregate([
-        {
-            $match: {
-                subscriber: mongoose.Types.ObjectId(subscriberId)
-            }
-        },
-        {
-            $lookup: {
-                from: "users",
-                localField: "channel",
-                foreignField: "_id",
-                as: "channels"
-            }
-        },
-        {
-            $unwind: "$channels"
-        },
-        {
-            $group: {
-                _id: "$subscriber",
-                channels: { $push: "$channels" },
-                channelCount: { $sum: 1 }
-            }
-        },
-        {
-            $project: {
-                "channels.password": 0,
-                "channels.refreshToken": 0,
-            }
-        }
-    ])
-
-    const data = result.length ? {
+  const data = result.length
+    ? {
         subscriberId,
         channelCount: result[0].channelCount,
         channels: result[0].channels
-    }
-        : {
-            subscriberId,
-            channelCount: 0,
-            channels: []
-        };
+      }
+    : {
+        subscriberId,
+        channelCount: 0,
+        channels: []
+      };
 
-    return res.status(200).json(
-        new APIResponse(200, data, "channels fetched successfully")
-    )
-
-})
+  return res
+    .status(200)
+    .json(new APIResponse(200, data, "channels fetched successfully"));
+});
 
 const checkSubscriptionStatus = asyncHandler(async (req, res) => {
     const { channelId } = req.params;

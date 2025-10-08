@@ -18,6 +18,7 @@ import UploadVideos from './components/user/upload/UploadVideos.jsx'
 import { UserChannel } from './components/user/UserChannel.jsx'
 import MyPosts from './components/user/posts/MyPosts.jsx'
 import { Toaster } from 'react-hot-toast'
+import SubscribeTo from './components/user/subscribedTo/SubscribeTo.jsx'
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
           <Route path='myVideos' element={<MyVideos />} />
           <Route path='upload' element={<UploadVideos />} />
           <Route path='myPosts' element={<MyPosts />} />
+          <Route path='mySubscription' element={<SubscribeTo />} />
         </Route>
 
         <Route path='video/:videoId' element={<VideoPlaying />} />

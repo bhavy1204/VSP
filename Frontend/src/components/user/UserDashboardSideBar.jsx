@@ -41,6 +41,11 @@ export default function UserDashboardSideBar() {
         navigate("/dashboard/myPosts");
     }
 
+    // my posts
+    const handleSubscription = async () => {
+        navigate("/dashboard/mySubscription");
+    }
+
 
     return (
         <>
@@ -64,7 +69,7 @@ export default function UserDashboardSideBar() {
                     <div className="myVideos flex gap-2 hover:text-cyan-600" onClick={handleHistory}>
                         <ThumbsUp /> liked post
                     </div>
-                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleSubscription}>
                         <CircleUser /> My Subscriptions
                     </div>
                     <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>

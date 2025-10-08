@@ -23,7 +23,7 @@ export const UserChannel = () => {
         const getSubscribers = async () => {
             try {
                 const res = await api.get(`v1/users/c/${user?.data?.username}`);
-                console.log(res);
+                // console.log("USER DETAILS :: ",user );
                 setSubscribers(res.data.data.subcribersCount)
                 setChannel(res.data.data.username)
                 setAvatar(res.data.data.avatar)
