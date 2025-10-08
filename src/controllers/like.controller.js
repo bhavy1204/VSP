@@ -114,21 +114,34 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     const userId = req.user?._id;
 
     if (!userId) {
-        new APIError(404, "user ID required")
+        throw new APIError(404, "user ID required");
     }
 
     const user = await User.findById(userId);
-
     if (!user) {
-        new APIError(404, "No such user found");
+        throw new APIError(404, "No such user found");
     }
 
-    const likedVideos = await Like.find({ likedBy: userId });
+    // fetch liked videos with aggregation
+    const likedVideos = await Like.aggregate([
+        { $match: { likedBy: userId } },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "video",
+                foreignField: "_id",
+                as: "videoDetails"
+            }
+        },
+        { $unwind: "$videoDetails" }, // automatically skips likes without a video
+        { $replaceRoot: { newRoot: "$videoDetails" } } // return only video objects
+    ]);
 
+    // no need to map, aggregation already returns video objects
     return res.status(200).json(
-        new APIResponse(200, likedVideos, "like videos fetched")
-    )
+        new APIResponse(200, likedVideos, "liked videos fetched successfully")
+    );
+});
 
-})
 
 export { toggleVideoLike, toggleCommentLike, toggleTweetLike, getLikedVideos }

@@ -16,7 +16,7 @@ export default function VideoPlaying() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector((state) => state.auth.user); //This state is a globsl state. 
 
     // Comment 
     const [form, setForm] = useState({ ownerId: "", content: "", videoId: "" });

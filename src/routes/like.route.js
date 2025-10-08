@@ -12,6 +12,6 @@ router.route("/toggle/c/:commentId").post(verifyJwt, toggleCommentLike);
 
 router.route("/toggle/t/:tweetId").post(verifyJwt, toggleTweetLike);
 
-router.route("/like/videos").get(verifyJwt, getLikedVideos);
+router.route("/videos").get(verifyJwt, getLikedVideos);
 
 export default router;

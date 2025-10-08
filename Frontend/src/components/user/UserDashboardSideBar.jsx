@@ -41,9 +41,24 @@ export default function UserDashboardSideBar() {
         navigate("/dashboard/myPosts");
     }
 
-    // my posts
+    // my subscriptions
     const handleSubscription = async () => {
         navigate("/dashboard/mySubscription");
+    }
+
+    // my liked video
+    const handleLikedVideos = async () => {
+        navigate("/dashboard/myLikedVideos");
+    }
+
+    // my liked post
+    const handleLikedPosts = async () => {
+        navigate("/dashboard/myLikedPosts");
+    }
+
+    // my playlist
+    const handlePlaylist = async () => {
+        navigate("/dashboard/myPlaylist");
     }
 
 
@@ -63,16 +78,16 @@ export default function UserDashboardSideBar() {
                     <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
                         <History /> History
                     </div>
-                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleLikedVideos}>
                         <Heart /> Liked video
                     </div>
-                    <div className="myVideos flex gap-2 hover:text-cyan-600" onClick={handleHistory}>
+                    <div className="myVideos flex gap-2 hover:text-cyan-600" onClick={handleLikedPosts}>
                         <ThumbsUp /> liked post
                     </div>
                     <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleSubscription}>
                         <CircleUser /> My Subscriptions
                     </div>
-                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleHistory}>
+                    <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handlePlaylist}>
                         <ListVideo /> My playlist
                     </div>
                     <div className="myVideos flex gap-2  hover:text-cyan-600" onClick={handleLogout}>
