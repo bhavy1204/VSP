@@ -143,5 +143,36 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     );
 });
 
+const getLikedTweets = asyncHandler(async (req, res) => {
+    const userId = req.user?._id;
 
-export { toggleVideoLike, toggleCommentLike, toggleTweetLike, getLikedVideos }
+    if (!userId) {
+        throw new APIError(404, "user ID required");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new APIError(404, "No such user found");
+    }
+
+    // fetch liked tweets using aggregation
+    const likedTweets = await Like.aggregate([
+        { $match: { likedBy: userId } }, // assuming `likedBy` stores the userId
+        {
+            $lookup: {
+                from: "tweets",           // collection name in MongoDB
+                localField: "tweet",      // field in Like that references Tweet
+                foreignField: "_id",
+                as: "tweetDetails"
+            }
+        },
+        { $unwind: "$tweetDetails" }, // skips likes pointing to deleted tweets
+        { $replaceRoot: { newRoot: "$tweetDetails" } } // return only tweet objects
+    ]);
+
+    return res.status(200).json(
+        new APIResponse(200, likedTweets, "liked tweets fetched successfully")
+    );
+});
+
+export { toggleVideoLike, toggleCommentLike, toggleTweetLike, getLikedVideos, getLikedTweets }

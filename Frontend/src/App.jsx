@@ -20,6 +20,7 @@ import MyPosts from './components/user/posts/MyPosts.jsx'
 import { Toaster } from 'react-hot-toast'
 import SubscribeTo from './components/user/subscribedTo/SubscribeTo.jsx'
 import MyLikedVideo from './components/user/liked/videos/myLikedVideo.jsx'
+import MyLikedPost from './components/user/liked/posts/MyLikedPost.jsx'
 
 function App() {
 
@@ -53,8 +54,8 @@ function App() {
           <Route path='myPosts' element={<MyPosts />} />
           <Route path='mySubscription' element={<SubscribeTo />} />
           <Route path='myLikedVideos' element={<MyLikedVideo />} />
-          
-          <Route path='myLikedVideos' element={<SubscribeTo />} />
+          <Route path='myLikedPosts' element={<MyLikedPost />} />
+
           <Route path='myLikedPosts' element={<SubscribeTo />} />
           <Route path='myLikedPosts' element={<SubscribeTo />} />
           <Route path='myPlaylist' element={<SubscribeTo />} />
