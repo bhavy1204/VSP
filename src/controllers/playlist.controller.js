@@ -43,7 +43,11 @@ const getUserplaylist = asyncHandler(async (req, res) => {
         throw new APIError(400, "no such user exists")
     }
 
-    const playlists = await Playlist.find({ creator: userId });
+    const playlists = await Playlist.find({ creator: userId }).populate({
+            path: "videos",
+            select: "title thumbnail views createdAt", // pick only what you need
+        })
+        .sort({ createdAt: -1 });
 
     return res.status(200).json(
         new APIResponse(200, playlists, "Playlist fetched successfully")
@@ -58,7 +62,11 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         throw new APIError(400, "Playlist ID required");
     }
 
-    const playlist = await Playlist.findById(playlistId);
+    const playlist = await Playlist.findById(playlistId).populate({
+            path: "videos",
+            select: "title thumbnail views createdAt", // pick only what you need
+        })
+        .sort({ createdAt: -1 });
 
     if (!playlist) {
         throw new APIError(404, "No uch playlist exists")
