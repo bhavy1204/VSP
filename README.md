@@ -1,2 +1,3 @@
-This is a final backend practice project 
+Multiverse- 
+a full stack youtube clone 
 >This project is currently under devlopment
