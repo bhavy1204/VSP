@@ -18,10 +18,10 @@ const PlaylistContainer = ({ onRemove, playlists, user }) => {
                                 <img
                                     src={
                                         playlist.videos?.[0]?.thumbnail ||
-                                        "/default-thumbnail.jpg"
+                                        "/public/faceLogo-removebg-preview.png"
                                     }
                                     alt={playlist.name}
-                                    className="w-40 h-24 object-cover rounded-md"
+                                    className="w-40 h-24 object-cover rounded-md opacity-80"
                                 />
                             </div>
 

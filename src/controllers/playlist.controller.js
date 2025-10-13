@@ -37,16 +37,21 @@ const getUserplaylist = asyncHandler(async (req, res) => {
         throw new APIError(400, "user Id required")
     }
 
+    console.log("USER ID :: ", userId);
+
+
     const user = await User.findById(userId);
+
+    console.log("USER FROM COMMENT :: ", user);
 
     if (!user) {
         throw new APIError(400, "no such user exists")
     }
 
     const playlists = await Playlist.find({ creator: userId }).populate({
-            path: "videos",
-            select: "title thumbnail views createdAt", // pick only what you need
-        })
+        path: "videos",
+        select: "title thumbnail views createdAt",
+    })
         .sort({ createdAt: -1 });
 
     return res.status(200).json(
@@ -63,9 +68,9 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     }
 
     const playlist = await Playlist.findById(playlistId).populate({
-            path: "videos",
-            select: "title thumbnail views createdAt", // pick only what you need
-        })
+        path: "videos",
+        select: "title thumbnail views createdAt", // pick only what you need
+    })
         .sort({ createdAt: -1 });
 
     if (!playlist) {

@@ -3,18 +3,31 @@ import Navbar from "./Navbar";
 import VerticalVideoCard from "./Videos/VerticalVideoCard.jsx";
 import { useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom"
-import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon, Link, Facebook } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon, Link, Facebook, ListPlus } from "lucide-react";
 import CommentsContainer from "./CommentsContainer";
 import axios from "axios";
 import api from "../../axios.js";
-import { useSelector } from "react-redux";
 import Toast, { Toaster } from "react-hot-toast"
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUser } from "../../features/authSlice.js";
+import { useRef } from "react";
 
 
 export default function VideoPlaying() {
+
+    const saveDropdownRef = useRef(null);
+    const dispatch = useDispatch();
+    const { playlistId } = useParams();
+    const { WatchingUser } = useSelector((state) => state.auth);
     const { videoId } = useParams();
+
     const location = useLocation();
     const navigate = useNavigate();
+
+    // Fetching user
+    useEffect(() => {
+        dispatch(fetchUser());
+    }, [dispatch]);
 
     const user = useSelector((state) => state.auth.user); //This state is a globsl state. 
 
@@ -49,6 +62,14 @@ export default function VideoPlaying() {
     // comment
     const [addCommentForm, setAddCommentForm] = useState(false);
 
+    // save
+    const [saveOpen, setSaveOpen] = useState(false);
+
+    const [playlists, setPlaylists] = useState([]);
+
+    const [selectedPlaylists, setSelectedPlaylists] = useState([]);
+
+
     // For video data
     useEffect(() => {
         const fetchVideoData = async () => {
@@ -58,7 +79,7 @@ export default function VideoPlaying() {
                 setMainVideoData(res.data.data.result);
                 setLikes(res.data.data.like);
                 setIsLiked(res.data.data.isLiked);
-                { console.log("Main video data :--- ", mainVideoData) }
+                // { console.log("Main video data :--- ", mainVideoData) }
             } catch (error) {
                 console.log(error);
                 alert("Error while showing video data")
@@ -91,7 +112,7 @@ export default function VideoPlaying() {
         const fetchVideos = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/api/v1/video/get/all`, { withCredentials: true });
-                console.log(res);
+                // console.log(res);
                 setVideos(res.data.data);
             } catch (error) {
                 console.log(error);
@@ -126,7 +147,7 @@ export default function VideoPlaying() {
                 return;
             try {
                 const res = await api.get(`/v1/subscription/status/${mainVideoData?.owner?._id}`);
-                console.log("THIS IS RES FROM EFFECT >> ", res)
+                // console.log("THIS IS RES FROM EFFECT >> ", res)
                 setSubscribed(res.data.data.isSubscribed)
             } catch (error) {
                 console.log(error);
@@ -198,6 +219,49 @@ export default function VideoPlaying() {
         setAddCommentForm(!addCommentForm);
     }
 
+    // for save
+    const handleSave = async () => {
+        if (!saveOpen) {
+            await fetchPlaylists();
+            setSaveOpen(true);
+        }
+    };
+
+
+    const fetchPlaylists = async () => {
+        try {
+            if (!user?.data?._id) return;
+            const res = await api.get(`/v1/playlist/u/getplaylist/${user?.data?._id}`);
+            setPlaylists(res.data.data)
+        } catch (error) {
+            console.error("Error fetching playlists:", error);
+        }
+    }
+
+    const handleCheckboxChange = (playlistId) => {
+        setSelectedPlaylists(prev =>
+            prev.includes(playlistId)
+                ? prev.filter(id => id !== playlistId)
+                : [...prev, playlistId]
+        );
+        console.log("After checking >>> ", playlists)
+    };
+
+    const handleSavePlaylists = async () => {
+        try {
+            await Promise.all(selectedPlaylists.map(plId =>
+                api.patch(`/v1/playlist/p/addVideo/${plId}/${videoId}`)
+            ));
+            Toast.success("Video added to playlists!");
+            setSelectedPlaylists([]); // clear selection
+            setSaveOpen(false); // close dropdown
+        } catch (error) {
+            console.error(error);
+            Toast.error("Failed to save video");
+        }
+    };
+
+
     // for submit comment
     const handleSubmitComment = async (e) => {
         e.preventDefault();
@@ -236,7 +300,7 @@ export default function VideoPlaying() {
                     >
                     </video>
                     <div className="interact flex justify-between px-4 items-center text-gray-300 no-scrollbar ">
-                        <div className="channel flex gap-6 items-center">
+                        <div className="channel flex gap-6 items-center mr-2">
                             <div className=" flex items-center  py-1.5 text-lg gap-2">
                                 <img src={mainVideoData?.owner?.avatar} alt="" className="h-10 w-10 border rounded-full" />
                                 <p>{mainVideoData?.owner?.username}</p>
@@ -282,6 +346,59 @@ export default function VideoPlaying() {
                                 <DownloadIcon />
                                 Download
                             </div>
+                            <div className="download flex gap-2 bg-gray-600 py-2 px-4 rounded-2xl relative " onClick={handleSave}>
+                                <ListPlus />
+                                Save
+                                {saveOpen &&
+                                    (
+                                        user ? (
+                                            <  div
+                                                ref={saveDropdownRef}
+                                                className="absolute left-0 mt-2 w-56 bg-white text-black rounded-xl shadow-lg p-3 z-50 flex flex-col gap-2"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <button className="bg-gray-200 hover:bg-gray-300 rounded-lg px-3 py-1 text-sm text-left  flex gap-1"
+                                                    onClick={handleCopyLink}>
+                                                    <Link className="text-sm font-thin py-1" /> save
+                                                </button>
+                                                {console.log(playlists)}
+                                                {playlists.length > 0 ? (
+                                                    playlists.map((pl) => (
+                                                        <label key={pl._id} className="flex items-center gap-2">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedPlaylists.includes(pl._id)}
+                                                                onChange={() => handleCheckboxChange(pl._id)}
+                                                            />
+                                                            {pl.name}
+                                                        </label>
+                                                    ))
+                                                ) : (
+                                                    <p>No playlists found</p>
+                                                )}
+                                                {selectedPlaylists.length > 0 && (
+                                                    <button
+                                                        className="bg-blue-500 text-white px-3 py-1 rounded-lg mt-2"
+                                                        onClick={handleSavePlaylists}
+                                                    >
+                                                        Save
+                                                    </button>
+                                                )}
+
+                                            </div>
+
+                                        ) : (
+                                            < div className="absolute left-0 mt-2 w-56 bg-white text-black rounded-xl shadow-lg p-3 z-50 flex flex-col gap-2 top-8" >
+                                                <button className="bg-gray-200 hover:bg-gray-300 rounded-lg px-3 py-1 text-sm text-left  flex gap-1"
+                                                    onClick={handleCopyLink}>
+                                                    Login to save
+                                                </button>
+
+                                            </div>
+                                        )
+                                    )
+                                }
+                            </div>
                         </div>
                     </div>
                     <div className="description bg-gray-900 text-gray-500 px-4">
@@ -294,7 +411,7 @@ export default function VideoPlaying() {
                                 Add comment
                             </div>}
                         </div>
-                        {console.log("This is s a user", user)}
+                        {/* {console.log("This is s a user", user)} */}
                         {addCommentForm &&
                             <div className="p-5 flex flex-col gap-2 bg-gray-950 my-5 rounded-2xl">
                                 <form action="" onSubmit={handleSubmitComment}>

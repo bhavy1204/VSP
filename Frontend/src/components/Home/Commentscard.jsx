@@ -50,7 +50,7 @@ export default function Commentscard({ owner, content, id }) {
     }
 
     const user = useSelector((state) => state.auth.user);
-    console.log("THIS IS SELECTOR USER OBJ >> ", user);
+    // console.log("THIS IS SELECTOR USER OBJ >> ", user);
     return (
         <div className="p-5 flex flex-col gap-2 bg-gray-950 my-5 rounded-2xl">
             <div className="user text-indigo-600">
