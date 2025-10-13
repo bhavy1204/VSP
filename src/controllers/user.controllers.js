@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import { APIResponse } from "../utils/APIResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
+import { Video } from "../models/video.model.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
     try {
@@ -447,12 +448,20 @@ const addToWatchHistory = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "Invalid video ID" });
     }
 
+    const video = await Video.findById(videoId);
+
     // Add to watchHistory only if not already there
     const user = await User.findByIdAndUpdate(
         userId,
         { $addToSet: { watchHistory: videoId } },
         { new: true }
     ).populate("watchHistory");
+
+    video.tags.forEach(tag => {
+        const currentCount = user.interests.get(tag) || 0;
+        user.interests.set(tag, currentCount + 1);
+    });
+    await user.save();
 
     res.status(200).json({
         success: true,

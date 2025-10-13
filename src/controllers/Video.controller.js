@@ -4,6 +4,7 @@ import { APIResponse } from "../utils/APIResponse.js";
 import { Video } from "../models/video.model.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import { Like } from "../models/like.model.js";
+import { User } from "../models/user.model.js";
 
 const getAllPlatformVideo = asyncHandler(async (req, res) => {
     const page = 1, limit = 12;
@@ -14,6 +15,69 @@ const getAllPlatformVideo = asyncHandler(async (req, res) => {
         new APIResponse(200, result, "videos fetched")
     )
 })
+
+const search = asyncHandler(async (req, res) => {
+  const q = req.query.q?.trim() || "";
+  if (!q) {
+    return res.status(200).json({ success: true, data: [] }); // empty search returns nothing
+  }
+
+  const regex = new RegExp(q, "i");
+  const videos = await Video.find({
+    $or: [
+      { title: regex },
+      { description: regex },
+      { tags: regex },
+    ],
+  }).limit(50);
+
+  res.status(200).json({
+    success: true,
+    data: videos,
+  });
+});
+
+
+const getRecommendedVideos = asyncHandler(async (req, res) => {
+    const user = await User.findById(req?.user?._id);
+
+    // Find videos that have matching tags but are not uploaded by the user
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    if (!user) {
+
+        let result = (await Video.find().skip((page - 1) * limit).limit(Number(limit)));
+
+        return res.status(200).json(
+            new APIResponse(200, result, "videos fetched successfully")
+        )
+
+    };
+
+    // Convert Map to plain object for easier use
+    const interests = Object.fromEntries(user.interests);
+
+    // Sort tags by their score
+    const topTags = Object.entries(interests)
+        .sort(([, a], [, b]) => b - a)   // descending
+        .slice(0, 5)                     // pick top 5 tags
+        .map(([tag]) => tag);
+
+    const recommendedVideos = await Video.find({
+        owner: { $ne: req.user._id },   // don’t show own videos
+        tags: { $in: topTags }          // match at least one tag
+    })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+    res.status(200).json({
+        success: true,
+        data: recommendedVideos,
+        message: "Recommended videos fetched"
+    });
+});
+
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const userId = req.user._id;
@@ -29,7 +93,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 })
 
 const publishVideo = asyncHandler(async (req, res) => {
-    const { title, description } = req.body;
+    const { title, description, tags } = req.body;
 
     const userId = req.user._id;
 
@@ -37,7 +101,12 @@ const publishVideo = asyncHandler(async (req, res) => {
         throw new APIError(400, "title and description required")
     }
 
-    console.log("This is req files : ",req);
+    if (!Array.isArray(tags)) {
+        return res.status(400).json({ message: "Tags must be an array" });
+    }
+
+    // console.log("This is req files : ",req);
+
     const videoLocalPath = req.files?.video[0]?.path;
 
     const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
@@ -61,6 +130,7 @@ const publishVideo = asyncHandler(async (req, res) => {
         description: description,
         owner: userId,
         isPublished: true,
+        tags: tags,
         views: 0,
         duration: videoURL?.duration
     })
@@ -87,15 +157,15 @@ const getVideoById = asyncHandler(async (req, res) => {
     }
 
     // Likes 
-    const like = await Like.countDocuments({video:videoId});
+    const like = await Like.countDocuments({ video: videoId });
 
     const isLiked = await Like.findOne({
-        video:videoId,
+        video: videoId,
         likedBy: req.user?._id
     })
 
     return res.status(200).json(
-        new APIResponse(200, {result, like,isLiked}, "video fetched success")
+        new APIResponse(200, { result, like, isLiked }, "video fetched success")
     )
 
 })
@@ -260,5 +330,7 @@ export {
     updateThumbnail,
     updateVideoData,
     deleteVideo,
-    togglePublishStatus
+    togglePublishStatus,
+    getRecommendedVideos,
+    search
 }

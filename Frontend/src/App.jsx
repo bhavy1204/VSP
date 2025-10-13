@@ -23,6 +23,7 @@ import MyLikedVideo from './components/user/liked/videos/myLikedVideo.jsx'
 import MyLikedPost from './components/user/liked/posts/MyLikedPost.jsx'
 import Playlist from './components/user/playlist/playlist.jsx'
 import PlaylistVideoContainer from './components/user/playlist/PlaylistvideoContainer.jsx'
+import SearchResults from './components/Home/SearchResults.jsx'
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
         <Route element={<LayoutWithNavbar />} >
           <Route path='/home/videos' element={<CardGrid />} />
           <Route path='/home/tweets' element={<TweetsGrid />} />
+          <Route path='/home/search' element={<SearchResults />} />
         </Route>
 
         <Route path='/dashboard' element={<Dashboard />} >

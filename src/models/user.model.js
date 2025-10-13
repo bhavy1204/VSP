@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    interests: {
+        type: Map,
+        of: Number,
+        default: {}
+    },
     avatar: {
         type: String,
         default: "link"
@@ -52,7 +57,7 @@ userSchema.pre("save", async function (next) {
     next();
 })
 
-userSchema.methods.isPasswordCorrect = async function(password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 

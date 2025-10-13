@@ -1,76 +1,113 @@
-import CardGrid from "./Videos/CardGrid"
-import Navbar from "./Navbar"
-import SideBar from "./SideBar"
-import axios from "axios"
-import Loader from "../utils/Loader"
-import { useEffect, useState } from "react"
-import { Outlet } from "react-router-dom"
+import CardGrid from "./Videos/CardGrid";
+import Navbar from "./Navbar";
+import SideBar from "./SideBar";
+import axios from "axios";
+import Loader from "../utils/Loader";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { Outlet } from "react-router-dom";
 
 export default function HomePage({ user }) {
-    // For videos
+    // Video states
     const [videos, setVideos] = useState([]);
-    // For tweets
-    const [tweets, setTweets] = useState([]);
-    // FOr loader
-    const [loading, setLoading] = useState(true);
-    // FOr loader
-    const [tweetLoading, setTweetLoading] = useState(true);
-    // Side bar 
-    const [sidebar, setIsSidebar] = useState(true);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
 
+    // Tweets
+    const [tweets, setTweets] = useState([]);
+    const [tweetLoading, setTweetLoading] = useState(true);
+
+    // Sidebar
+    const [sidebar, setIsSidebar] = useState(true);
     const toggleSidebar = () => setIsSidebar(prev => !prev);
 
-    // Fetching all videos
-    useEffect(() => {
-        const fetchVideos = async () => {
-            try {
-                const vidRes = await axios.get("http://localhost:3000/api/v1/video/get/all");
-                console.log(vidRes)
-                setVideos(vidRes.data.data);
-            } catch (error) {
-                console.log(error);
-                alert("Error while displaying videos")
-            } finally {
-                setLoading(false);
+    // search
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+
+    // Scroll container reference
+    const scrollContainerRef = useRef(null);
+    const limit = 8;
+
+    // ✅ Fetch videos (paginated + recommendation)
+    const fetchVideos = useCallback(async (currentPage) => {
+        try {
+            setLoading(true);
+            const res = await axios.get(`http://localhost:3000/api/v1/video/get/all?page=${currentPage}&limit=${limit}`, {
+                withCredentials: true,
+            });
+
+            const newVideos = res.data?.data || [];
+            if (newVideos.length === 0) {
+                setHasMore(false);
+            } else {
+                setVideos(prev => [...prev, ...newVideos]);
             }
+        } catch (error) {
+            console.error("Error fetching videos:", error);
+        } finally {
+            setLoading(false);
         }
-        fetchVideos()
     }, []);
 
-    // Fetching all tweets
+    // ✅ Fetch initial videos and on page change
+    useEffect(() => {
+        fetchVideos(page);
+    }, [fetchVideos, page]);
+
+    // ✅ Infinite Scroll inside the scrollable div
+    useEffect(() => {
+        const scrollDiv = scrollContainerRef.current;
+        if (!scrollDiv) return;
+
+        const handleScroll = () => {
+            const bottom = scrollDiv.scrollHeight - scrollDiv.scrollTop <= scrollDiv.clientHeight + 100;
+            if (bottom && hasMore && !loading) {
+                setPage(prev => prev + 1);
+            }
+        };
+
+        scrollDiv.addEventListener("scroll", handleScroll);
+        return () => scrollDiv.removeEventListener("scroll", handleScroll);
+    }, [hasMore, loading]);
+
+    // ✅ Fetch tweets
     useEffect(() => {
         const fetchTweets = async () => {
             try {
                 const res = await axios.get("http://localhost:3000/api/v1/tweet/all");
-                console.log(res)
-                setTweets(res.data.data);
+                setTweets(res.data.data || []);
             } catch (error) {
-                console.log(error);
-                alert("Error while displaying videos")
+                console.error("Error fetching tweets:", error);
             } finally {
                 setTweetLoading(false);
             }
-        }
-        fetchTweets()
+        };
+        fetchTweets();
     }, []);
 
-
     return (
-        <>
-            <div className="flex flex-col h-screen">
-                <Navbar user={user} toggleSidebar={toggleSidebar} />
-                <div className="flex flex-1 overflow-hidden no-scrollbar">
-                    <SideBar sidebar={sidebar} />
-                    <div className="flex-1 p-4 overflow-y-auto no-scrollbar">
-                        {loading ? (
-                            <Loader />
-                        ) : (
-                            // <CardGrid videos={videos} />
-                            <Outlet context={{ videos, tweets }} />
-                        )}
-                    </div>
+        <div className="flex flex-col h-screen">
+            <Navbar
+                user={user}
+                toggleSidebar={toggleSidebar}
+                setSearchQuery={setSearchQuery}
+                setSearchResults={setSearchResults}
+            />
+            <div className="flex flex-1 overflow-hidden no-scrollbar">
+                <SideBar sidebar={sidebar} />
+                <div ref={scrollContainerRef} className="flex-1 p-4 overflow-y-auto no-scrollbar">
+                    {videos.length === 0 && loading ? (
+                        <Loader />
+                    ) : (
+                        <>
+                            <Outlet context={{ videos, tweets, searchQuery, setSearchQuery, searchResults, setSearchResults }} />
+                            {loading && <p className="text-center text-gray-400 mt-4">Loading more videos...</p>}
+                            {!hasMore && <p className="text-center text-gray-500 mt-4">No more videos!</p>}
+                        </>
+                    )}
                 </div>
             </div>
-        </>
-    )
+        </div>
+    );
 }

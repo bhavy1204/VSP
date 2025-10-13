@@ -10,6 +10,7 @@ import { User } from "../models/user.model.js"
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
+    const userId = req.user?._id
 
     if (!videoId) {
         throw new APIError(400, "Video Id required");
@@ -26,9 +27,28 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     if (existingLike) {
         // If liked, remove like
         await Like.deleteOne({ _id: existingLike._id });
+        // update recommdation
+        const user = await User.findById(userId);
+
+        video.tags.forEach(tag => {
+            const currentCount = user.interests.get(tag) || 0;
+            user.interests.set(tag, currentCount - 1 );
+        });
+        
+        await user.save();
     } else {
         // If not liked, create like
         await Like.create({ video: videoId, likedBy: req.user._id });
+
+        // update recommdation
+        const user = await User.findById(userId);
+
+        video.tags.forEach(tag => {
+            const currentCount = user.interests.get(tag) || 0;
+            user.interests.set(tag, currentCount + 1);
+        });
+
+        await user.save();
     }
 
     // Get updated total likes
