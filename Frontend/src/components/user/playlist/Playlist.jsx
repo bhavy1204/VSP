@@ -3,7 +3,7 @@ import api from "../../../axios";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUser } from "../../../features/authSlice";
-import PlaylistContainer from "./playlistContainer";
+import PlaylistContainer from "./PlaylistContainer";
 
 const Playlist = () => {
   const dispatch = useDispatch();
