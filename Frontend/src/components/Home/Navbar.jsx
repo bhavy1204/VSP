@@ -10,8 +10,8 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import api from '../../axios';
 
 
 export default function Navbar({ toggleSidebar, setSearchQuery, setSearchResults }) {
@@ -38,7 +38,7 @@ export default function Navbar({ toggleSidebar, setSearchQuery, setSearchResults
         setSearchQuery(query);
 
         try {
-            const res = await axios.get(`http://localhost:3000/api/v1/video/search?q=${encodeURIComponent(query)}`);
+            const res = await api.get(`/v1/video/search?q=${encodeURIComponent(query)}`);
             console.log("Search response >>> ", res)
             setSearchResults(res.data.data || []);
             navigate("/home/search"); // route to SearchResults

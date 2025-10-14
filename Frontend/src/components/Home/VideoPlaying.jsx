@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom"
 import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon, Link, Facebook, ListPlus } from "lucide-react";
 import CommentsContainer from "./CommentsContainer";
-import axios from "axios";
 import api from "../../axios.js";
 import Toast, { Toaster } from "react-hot-toast"
 import { useSelector, useDispatch } from "react-redux";
@@ -74,7 +73,7 @@ export default function VideoPlaying() {
     useEffect(() => {
         const fetchVideoData = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/api/v1/video/get/${videoId}`, { withCredentials: true });
+                const res = await api.get(`/v1/video/get/${videoId}`, { withCredentials: true });
                 console.log("this is calling teh video res :---", res);
                 setMainVideoData(res.data.data.result);
                 setLikes(res.data.data.like);
@@ -94,7 +93,7 @@ export default function VideoPlaying() {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/api/v1/comment/v/${videoId}`, { withCredentials: true });
+                const res = await api.get(`/v1/comment/v/${videoId}`, { withCredentials: true });
                 console.log("Comment fetch res : ", res);
                 setComment(res.data.data);
             } catch (error) {
@@ -111,7 +110,7 @@ export default function VideoPlaying() {
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/api/v1/video/get/all`, { withCredentials: true });
+                const res = await api.get(`/v1/video/get/all`, { withCredentials: true });
                 // console.log(res);
                 setVideos(res.data.data);
             } catch (error) {

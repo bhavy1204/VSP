@@ -1,6 +1,5 @@
 import { useState, useRef, use } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import { useNavigate } from "react-router-dom"
 import { setUser } from "../features/authSlice";
 
@@ -16,7 +15,7 @@ export default function Signup() {
     // google callback
     const handleSuccess = async (credentialResponse) => {
         try {
-            const res = await axios.post("http://localhost:3000/api/v1/auth/google/callback", {
+            const res = await api.post("/v1/auth/google/callback", {
                 token: credentialResponse.credential,
             });
             console.log("Logged in:", res.data);
@@ -46,7 +45,7 @@ export default function Signup() {
 
 
         try {
-            const res = await axios.post("http://localhost:3000/api/v1/users/register", formData, {
+            const res = await api.post("/v1/users/register", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 

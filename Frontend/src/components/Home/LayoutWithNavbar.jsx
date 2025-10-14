@@ -1,10 +1,10 @@
 import CardGrid from "./Videos/CardGrid";
 import Navbar from "./Navbar";
 import SideBar from "./SideBar";
-import axios from "axios";
 import Loader from "../utils/Loader";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Outlet } from "react-router-dom";
+import api from "../../axios";
 
 export default function HomePage({ user }) {
     // Video states
@@ -33,7 +33,7 @@ export default function HomePage({ user }) {
     const fetchVideos = useCallback(async (currentPage) => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:3000/api/v1/video/get/all?page=${currentPage}&limit=${limit}`, {
+            const res = await api.get(`/v1/video/get/all?page=${currentPage}&limit=${limit}`, {
                 withCredentials: true,
             });
 
@@ -75,7 +75,7 @@ export default function HomePage({ user }) {
     useEffect(() => {
         const fetchTweets = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/api/v1/tweet/all");
+                const res = await api.get("/v1/tweet/all");
                 setTweets(res.data.data || []);
             } catch (error) {
                 console.error("Error fetching tweets:", error);
