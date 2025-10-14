@@ -19,10 +19,10 @@ import { UserChannel } from './components/user/UserChannel.jsx'
 import MyPosts from './components/user/posts/MyPosts.jsx'
 import { Toaster } from 'react-hot-toast'
 import SubscribeTo from './components/user/subscribedTo/SubscribeTo.jsx'
-import MyLikedVideo from './components/user/liked/videos/myLikedVideo.jsx'
+import MyLikedVideo from './components/user/liked/videos/MyLikedVideo.jsx'
 import MyLikedPost from './components/user/liked/posts/MyLikedPost.jsx'
-import Playlist from './components/user/playlist/playlist.jsx'
-import PlaylistVideoContainer from './components/user/playlist/PlaylistvideoContainer.jsx'
+import Playlist from './components/user/playlist/Playlist.jsx'
+import PlaylistVideoContainer from './components/user/playlist/PlaylistVideoContainer.jsx'
 import SearchResults from './components/Home/SearchResults.jsx'
 
 function App() {
