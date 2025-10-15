@@ -44,6 +44,7 @@ function App() {
         <Route path='/login' element={<Login />} />
 
         <Route element={<LayoutWithNavbar />} >
+          <Route path='/' element={<CardGrid />} />
           <Route path='/home/videos' element={<CardGrid />} />
           <Route path='/home/tweets' element={<TweetsGrid />} />
           <Route path='/home/search' element={<SearchResults />} />
