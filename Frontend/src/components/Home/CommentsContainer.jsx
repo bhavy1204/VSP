@@ -1,4 +1,5 @@
 import Commentscard from "./Commentscard"
+import EmptyState from "../utils/EmptyState"
 
 export default function CommentsContainer({ comments=[] }) {
     return (
@@ -15,11 +16,7 @@ export default function CommentsContainer({ comments=[] }) {
                         />
                     ))
                 ) : (
-                    <Commentscard
-                        key={101}
-                        owner={"user"}
-                        content={"this is a sample comment"}
-                    />
+                    <EmptyState message="No comments yet"/>
                 )}
             </div>
         </>

@@ -6,8 +6,11 @@ const app = express();
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
-    credentials: true
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 }))
+
 
 app.use(express.json({
     limit: "16kb"
@@ -31,7 +34,7 @@ import googleLogin from "./routes/GoogleLogin.route.js"
 import dislike from "./routes/dislike.route.js";
 
 // Routes declaration
-app.use("/api/v1/auth",googleLogin);
+app.use("/api/v1/auth", googleLogin);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/healthcheck", healthCheckRouter);
 app.use("/api/v1/comment", comment);
@@ -41,7 +44,7 @@ app.use("/api/v1/dislike", dislike);
 app.use("/api/v1/playlist", playlist);
 app.use("/api/v1/subscription", subscription);
 app.use("/api/v1/tweet", tweet);
-app.use("/api/v1/video",video);
+app.use("/api/v1/video", video);
 
 
 export { app }

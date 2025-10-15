@@ -22,6 +22,6 @@ export const verifyJwt = asyncHandler(async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        throw new APIError(404, error?.message || "User not found");
+        throw new APIError(401, error || "Unauthorized");
     }
 })

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://vsp-oor0.onrender.com/api", // your backend URL
+  baseURL: "http://localhost:3000/api", // your backend URL
   withCredentials: true, // IMPORTANT: allows cookies to be sent
 });
 

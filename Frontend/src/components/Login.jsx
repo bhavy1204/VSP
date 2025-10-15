@@ -22,29 +22,28 @@ export default function Login() {
         e.preventDefault();
 
         try {
-
             const res = await api.post("/v1/users/login", {
-                "email": form.email,
-                "password": form.password,
-                "username": form.username,
+                email: form.email,
+                password: form.password,
+                username: form.username,
             });
 
-            console.log("User => ", res.data.data.user);
+            const loggedInUser = res.data.data.user;
 
-            localStorage.setItem("user", JSON.stringify(res.data.data.user));
+            // Update Redux
+            dispatch(setUser(loggedInUser));
 
-            dispatch(setUser(res.data.data.user));
-            console.log("Dispatched user:", user);
-            console.log("Dispatched status:", status);
+            // Optional: store in localStorage for refresh persistence
+            localStorage.setItem("user", JSON.stringify(loggedInUser));
 
-            navigate("/home/videos")
+            // Navigate to dashboard
+            navigate("/dashboard");
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
             alert("Some error while login. Please try in few minutes");
         }
-
-    }
+    };
 
     return (
         <>

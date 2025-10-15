@@ -9,7 +9,7 @@ export const fetchUser = createAsyncThunk(
             // console.log("authMe response:", res.data);
             return res.data;
         } catch (err) {
-            console.error("authMe error:", err.message);
+            console.error("authMe error:", err);
             return rejectWithValue(err.response?.data || "Not logged in");
         }
     }
@@ -17,7 +17,11 @@ export const fetchUser = createAsyncThunk(
 
 const authSlice = createSlice({
     name: "auth",
-    initialState: { user: null, status: "idle" },
+    // in authSlice.js
+    initialState: {
+        user: JSON.parse(localStorage.getItem("user")) || null,
+        status: "idle"
+    },
     reducers: {
         logout(state) {
             state.user = null;

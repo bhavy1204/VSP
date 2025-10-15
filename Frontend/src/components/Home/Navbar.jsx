@@ -91,7 +91,7 @@ export default function Navbar({ toggleSidebar, setSearchQuery, setSearchResults
                         <a href={`${user ? '/dashboard/user' : '/signup'}`}>
                             {/* {console.log("THIS IS THE USER FROM NAVBAR >> ", user)} */}
                             {user ?
-                                <img src={user.data.avatar} alt="" className='h-10 rounded-full w-10' />
+                                <img src={user?.data?.avatar} alt="" className='h-10 rounded-full w-10' />
                                 :
                                 <PersonIcon fontSize='medium' />}
                         </a>

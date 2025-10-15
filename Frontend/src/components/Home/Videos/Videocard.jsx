@@ -7,7 +7,7 @@ export default function VideoCard({ title, views, thumbnail, upload, videoId }) 
         try {
             const res = await api.post(`/v1/users/addToWatchHistory/${videoId}`)
             console.log(res);
-        } catch (err) { 
+        } catch (err) {
             console.log("WATCH HISTORY ADD ERROR : ", err);
         }
     }
@@ -17,8 +17,8 @@ export default function VideoCard({ title, views, thumbnail, upload, videoId }) 
         <>
             <Link to={`/video/${videoId}`} >
                 <div className="card-container m-4 bg-gray-900 rounded-2xl" onClick={handleVideoClick}>
-                    <div className="thumbnail flex justify-center px-0.5 pt-0.5">
-                        <img src={thumbnail} alt="" className="rounded-t-md" />
+                    <div className="thumbnail flex justify-center px-0.5 pt-0.5 h-48 overflow-hidden">
+                        <img src={thumbnail} alt="" className="rounded-t-md w-full h-full object-cover" />
                     </div>
                     <div className="data">
                         <div className="title text-white flex justify-start px-4 py-1">
