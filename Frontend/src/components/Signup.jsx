@@ -106,17 +106,17 @@ export default function Signup() {
                         <input type="text" placeholder="username" name="username" className="w-full border-b-1 px-2 py-1 focus:outline-none" autoComplete="off" onChange={handleChange} />
                         <input type="email" placeholder="email" name="email" className="w-full border-b-1 px-2 py-1 focus:outline-none" autoComplete="off" onChange={handleChange} />
 
-                        <button type="button" className="w-full border-b-1 px-2 py-1 text-left " onClick={handlePfpButtonClick}>
+                        <button type="button" className="w-full border-dashed border rounded-md bg-gray-400  px-2 py-1 text-left " onClick={handlePfpButtonClick}>
                             <span className="text-gray-500">{avatarName}</span>
                         </button>
                         <input type="file" ref={fileInputRef} onChange={fileInputChange} id="hiddenFileInput" className="hidden" name="avatar" />
 
-                        <button type="button" className="w-full border-b-1 px-2 py-1 text-left " onClick={handleCoverButtonClick}>
+                        <button type="button" className="w-full border-dashed border rounded-md bg-gray-400  px-2 py-1 text-left " onClick={handleCoverButtonClick}>
                             <span className="text-gray-500">{coverImageName}</span>
                         </button>
                         <input type="file" ref={coverInputRef} onChange={CoverInputChange} id="hiddenFileInput" className="hidden" name="coverImage" />
 
-                        <input type="text" placeholder="password focus:outline-none" autoComplete="off" name="password" className="w-full border-b-1 px-2 py-1" onChange={handleChange} />
+                        <input type="text" placeholder="password" autoComplete="off" name="password" className="w-full border-b-1 px-2 py-1" onChange={handleChange} />
 
 
                         <div className="actions flex w-full justify-between px-2 ">
